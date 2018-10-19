@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2018 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="video" unicode="&#xe800;" d="M980 600l-100 0 0-100 100 0 0-100-100 0 0-100 100 0 0-100-100 0 0-100 100 0 0-60q0-16-12-28t-28-12l-900 0q-16 0-28 12t-12 28l0 60 100 0 0 100-100 0 0 100 100 0 0 100-100 0 0 100 100 0 0 100-100 0 0 60q0 18 12 29t28 11l900 0q16 0 28-11t12-29l0-60z m-600-400l250 150-250 150 0-300z" horiz-adv-x="980" />
+</font>
+</defs>
+</svg>

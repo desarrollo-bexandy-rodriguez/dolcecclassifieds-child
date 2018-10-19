@@ -1,0 +1,262 @@
+/*
+ * Theme Name: DolceClassifieds Child
+ * Theme URI: http://dolceclassifieds.com/
+ * Version: 1.0
+ * Description: Tema hijo de DolceClassifieds para hacer personalizaciones
+ * Author: Bexandy Rodríguez
+ * Author URI: http://bexandyrodriguez.com.ve
+ * Template: dolceclassifieds/
+ * */
+
+@import url("../dolceclassifieds/style.css");
+
+/*----------------- Empieza a añadir cambios aquí abajo -------------------------------*/
+
+/*********** HEADER ***********/
+header {
+	background-image: none !important;
+	background-color:  transparent !important;
+}
+
+header .logo h1 a {
+	color: #FB1843 !important;
+}
+
+header .logo h2 {
+	color: #FB1843 !important;
+}
+
+header nav .main-nav li a {
+	color: #FB1843 !important;
+}
+
+header nav .main-nav li a:active {
+	color: #22a4e6 !important;
+}
+
+header nav .main-nav li a:hover {
+	background: #CC1336 !important;
+    color: #fff !important;
+}
+
+header .user-menu .user-info .text {
+	color: #FB1843 !important;
+}
+
+header .user-menu .user-info .name {
+	color: #FB1843 !important;
+}
+
+header .nav2 {
+	background: none;
+	background-color: #FB1843 !important;
+}
+
+.header-content {
+	padding: 0px !important;
+}
+
+
+
+@media (max-width: 1400px){
+	header .header-content {
+		padding-left: 0px !important;
+		padding-right: 0px !important;
+	}
+}
+
+
+header .header-search .fake-select-header-category-chooser, 
+header .header-search .fake-select-distance {
+	margin-right: 20px !important;
+}
+
+.precios-box-wrapper {
+    background-color: #fff;
+    padding: 15px;
+    padding-bottom: 8px;
+    border-radius: 3px;
+}
+
+
+.precios-box {
+    margin-top: -15px;
+}
+
+.precios-autocomplete {
+    padding-top: 5px;
+}
+
+input#amount {
+	color: #22a4e6 !important;
+}
+
+label[for="amount"] {
+	color: 	#45474d;
+	font-family: "Raleway", sans-serif;
+	letter-spacing: 0.04em;
+}
+
+.keyword-box-wrapper, 
+.location-box-wrapper,
+.precios-box-wrapper {
+	margin: 5px 0;
+}
+
+.keyword-box-wrapper .input, 
+.location-box-wrapper .input {
+	margin-bottom: 5px;
+}
+
+.search-button {
+	display: none;
+}
+
+/*********** AÑADIR VIDEO EN FORMULARIO DE ANUNCIO ***********/
+
+.post-form .video-upload {
+	border: 2px #e6eaf2 dashed;
+	padding: 10px;
+	cursor: pointer;
+	color: #45474d;
+	line-height: 2em;
+	font-size: 1.2em;
+}
+.post-form .video-upload:hover {
+	border-color: #22a4e6;
+}
+.post-form .video-upload .child-icon {
+	font-size: 4em;
+	color: #22a4e6;
+}
+.post-form .video-upload .manually-select-videos {
+	color: #22a4e6;
+	font-weight: 600;
+}
+.post-form .video-upload .max-vid {
+	background: #22a4e6;
+	color: #fff;
+	font-weight: 600;
+	padding: 2px 4px;
+}
+
+.post-form .uploaded-videos-queue {
+	padding: 20px 0;
+}
+.post-form .uploaded-videos-queue .one-vid {
+	padding: 15px 0;
+}
+.post-form .uploaded-videos-queue .one-vid .percentage {
+	font-size: 2.8em;
+	color: #49cd65;
+	font-weight: bold;
+	margin-top: -5px;
+	padding-right: 10px;
+}
+.post-form .uploaded-videos-queue .one-vid .close {
+	font-size: 1.3em;
+	color: #b8c3d9;
+	cursor: pointer;
+}
+.post-form .uploaded-videos-queue .one-vid .close .icon:hover {
+	color: #EF3A39;
+}
+.post-form .uploaded-videos-queue .one-vid .name {
+	font-weight: 600;
+	color: #45474d;
+	padding: 2px 0;
+	overflow: hidden;
+}
+.post-form .uploaded-videos-queue .one-vid .size {
+	color: #49586a;
+	padding: 2px 0;
+}
+.post-form .uploaded-videos-queue .one-vid .message {
+	padding: 2px 0;
+	color: #EF3A39;
+	font-size: 0.9em;
+}
+
+.post-form .uploaded-videos .one-vid {
+	float: left;
+	width: 25%;
+	padding: 10px;
+	position: relative;
+	text-align: center;
+}
+.post-form .uploaded-videos .one-vid .preview-vid {
+	float: left;
+	width: 100%;
+	min-height: 100px;
+	cursor: pointer;
+}
+.post-form .uploaded-videos .one-vid .main-video {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	margin-left: 10px;
+	padding: 5px;
+	text-align: center;
+	background: #22a4e6;
+	color: #fff;
+	font-weight: 600;
+	opacity: 0.9;
+	cursor: pointer;
+	z-index: 2;
+}
+.post-form .uploaded-videos .one-vid .mark-as-main,
+.post-form .uploaded-videos .one-vid .remove {
+	padding: 4px 6px;
+	color: #49586a;
+	cursor: pointer;
+	background: #fff;
+	font-weight: 600;
+	font-size: 0.9em;
+}
+.post-form .uploaded-videos .one-vid .remove {
+	display: inline-block;
+}
+.post-form .uploaded-videos .one-vid .mark-as-main:hover {
+	background: #22a4e6;
+	color: #fff;
+}
+.post-form .uploaded-videos .one-vid .remove:hover {
+	background: #EF3A39;
+	color: #fff;
+}
+.post-form .uploaded-videos .one-vid .rotate {
+	color: #22a4e6;
+	cursor: pointer;
+}
+.post-form .uploaded-videos .one-vid .rotate:hover {
+	background: #22a4e6;
+	color: #fff;
+}
+.post-form .uploaded-videos .one-vid .rotate.processing,
+.post-form .uploaded-videos .one-vid .rotate.processing:hover {
+	color: #49586a;
+	background: none;
+}
+.post-form .uploaded-videos .one-vid .rotate-right {
+	margin-left: 3px;
+}
+.post-form .uploaded-videos .one-vid .rotate .icon {
+	display: block;
+	padding: 4px 3px 4px 5px;
+}
+
+.post-form .drag-videos-overlay {
+	background: #fff;
+	color: #22a4e6;
+	font-size: 5em;
+	font-weight: 600;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	position: fixed;
+	top: 0;
+	left: 0;
+}
+.post-form .drag-videos-overlay span {
+	padding: 0 30px;
+}
