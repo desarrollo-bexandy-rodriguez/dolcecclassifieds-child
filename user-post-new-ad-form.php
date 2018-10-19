@@ -407,8 +407,7 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 						if(is_json) {
 							if(data.status == "ok") {
 								//add the new image in the image preview
-								$('<div class="one-vid" data-attachment-id="'+data.attachment_id+'"><div class="main-video rad3 hide"><span class="icon icon-star"></span> <?=addslashes(_d('Main video',1020))?>
-									</div><video controls class="preview-vid rad3"><source src="'+data.attachment_url+'" type="'+data.attachment_mime_type+'" /><div class="clear5"></div><div class="remove rad17"><span class="icon icon-delete"></span> <?=addslashes(_d('Remove',469))?></div></video>').hide().insertAfter('.post-form .uploaded-videos .uploaded-videos-message').fadeIn("slow");
+								$('<div class="one-vid" data-attachment-id="'+data.attachment_id+'"><video controls class="preview-vid rad3"><source src="'+data.attachment_url+'" type="'+data.attachment_mime_type+'" /></video><div class="clear5"></div><div class="remove rad17"><span class="icon icon-delete"></span> '._d('Remove',469).'</div></div>').hide().insertAfter('.post-form .uploaded-videos .uploaded-videos-message').fadeIn("slow");
 
 								if($('.post-form .uploaded-videos .one-vid').length >= "1" && !$('.post-form input[name="main_video"]').val()) {
 									$('.post-form .uploaded-videos .one-vid[data-attachment-id="'+data.attachment_id+'"]').find('.main-video').show().parent().find('.mark-as-main').hide();
@@ -537,14 +536,7 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 				$attachment_id = $video->post_id ? $video->post_id : $video->ID;
 				$video_mime_type = $video->post_mime_type;
 				$video_th_url = wp_get_attachment_url($attachment_id);
-				echo '<div class="one-vid" data-attachment-id="'.$attachment_id.'">
-						<div class="main-video rad3 hide">
-							<span class="icon icon-star"></span> '._d('Main video',1020).'
-						</div>
-						<video controls class="preview-vid rad3">
-							<source src="'.$video_th_url.'" type="'.$video_mime_type.'" />
-						</video><div class="clear5"></div>
-							<div class="remove rad17"><span class="icon icon-delete"></span> '._d('Remove',469).'</div>';
+				echo '<div class="one-vid" data-attachment-id="'.$attachment_id.'"><video controls class="preview-vid rad3"><source src="'.$video_th_url.'" type="'.$video_mime_type.'" /></video><div class="clear5"></div><div class="remove rad17"><span class="icon icon-delete"></span> '._d('Remove',469).'</div></div>';
 			}
 			?>
 		</div> <!-- uploaded-videos -->

@@ -19,9 +19,11 @@ function my_enqueue_assets() {
     	'query_vars' => json_encode( $wp_query->query )
     ));
 
+    wp_enqueue_script( 'html5gallery',  get_stylesheet_directory_uri() . '/html5gallery/html5gallery.js',array( 'jquery' ), '1.6', true );
+    wp_enqueue_script('child-post-new-ad', get_stylesheet_directory_uri().'/js/child-post-new-ad.js', array(), '', true );
         // files for the "Post your ad" page
     if(get_the_ID() == get_option('post_new_ad')) {
-        wp_enqueue_script('child-post-new-ad', get_stylesheet_directory_uri().'/js/child-post-new-ad.js', array(), '', true );
+        
     }
     wp_enqueue_style('child-icon-font', get_stylesheet_directory_uri().'/icon-font/child-icon-font.css');
 }

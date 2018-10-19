@@ -749,57 +749,23 @@ get_header(); ?>
 			<div class="clear"></div>
 		</div> <!-- item-images -->
 
-		<!-- ----------------------AGREGAR VIDEOS -------------------------------------- -->
-		<div><h1>AGREGAR VIDEOS</h1></div>
-		<div class="item-videos">
-			<?php if($videos) { ?>
-			<div class="selected-video-wrapper">
-				<div class="selected-video">
-					<?php
-					//$main_video_id = get_post_thumbnail_id(get_the_ID()) ? get_post_thumbnail_id(get_the_ID()) : $videos[0]->ID;
-					$main_video_id = $videos[0]->ID;
-					$main_video_mime_type = $videos[0]->post_mime_type;
-					$full_vid_url = wp_get_attachment_url($main_video_id);
-					foreach ($videos as $key => $video) {
-						if($video->ID == $main_video_id) {
-							$index = $key;
-						}
-					}
-					$video_html = wp_get_attachment_url($main_video_id);
-					//echo '<a href="'.$full_video_url[0].'"><img data-index="'.$index.'" src="'.$video_html[0].'" alt="" /></a>';
-					echo '<video controls><source src="'.$video_html.'" type="'.$main_video_mime_type.'"></video>';
-					?>
-
-				</div> <!-- selected-video -->
-			</div> <!-- selected-video-wrapper -->
-
-			<div class="videos-gallery" id="scrollbar">
-	            <div class="scrollbar hide"><div class="video rad17"></div></div>
-
-	            <div class="viewport">
-	                 <div class="overview">
-						<?php
-						foreach ($videos as $key => $video) {
-							$preview_video_url = wp_get_attachment_url( $video->ID );
-							$full_vid_url = wp_get_attachment_url( $video->ID );
-							$full_vid_url_array[] = $full_vid_url;
-							$video_html =  wp_get_attachment_url( $video->ID );
-							$video_html = '<img data-preview-th="'.$preview_vid_url[0].'" data-full-img="'.$full_vid_url[0].'" data-index="'.$key.'" src="'.$video_html[0].'" alt="" class="gallery-thumb" />';
-							echo $video_html;
-						}
-						?>
-					</div> <!-- overview -->
-				</div> <!-- viewport -->
-			</div> <!-- videos-gallery -->
-			<?php } else { ?>
-			<div class="no-videos text-center">
-				<span class="icon icon-pictures"></span>
-				<span class="text"><?=_d('No pictures',544)?></span>
-			</div> <!-- no-photos -->
-			<?php } ?>
-			<div class="clear"></div>
-		</div> <!-- item-images -->
-
+		<!-- ----------------------AGREGAR VIDEOS 1 -------------------------------------- -->
+				<div class="clear"></div>
+						<div class="item-videos">
+							<?php if($videos) { ?>
+								<div class="html5gallery" data-skin="darkness" data-width="480" data-height="272" >
+										<?php
+										foreach ($videos as $key => $video) {
+											$index = $key;
+											$video_id = $video->ID;
+											$video_mime_type = $video->post_mime_type;
+											$video_url = wp_get_attachment_url($video_id);
+											echo'<a href="'.$video_url.'"><img src="'.$video_mime_type.'" alt="'.$video->post_title.'"></a></div>';
+										} ?>										
+									</div> <!-- html5gallery -->
+							<?php } ?>
+						</div> <!-- item-videos -->
+						<div class="clear"></div>
 		<!-- ------------------------- FIN AGREGAR VIDEOS ------------------------------------- -->
 
 		<?php get_template_part('includes/image-lightbox-html-code'); ?>
