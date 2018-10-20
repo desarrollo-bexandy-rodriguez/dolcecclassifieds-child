@@ -271,7 +271,7 @@ get_header(); ?>
 		<div class="clear30 hide-is-mobile"></div>
 
 		<?php
-		$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+		$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => array('image','video'), 'order' => 'ASC', 'orderby' => 'menu_order ID') );
 		//reset the keys of the returned array so we can retrieve the first image from the array
 		$photos = array_values($photos);
 		$videos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'video', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
@@ -506,6 +506,21 @@ get_header(); ?>
 
 							<div class="clear"></div>
 						</div> <!-- item-conditions -->
+										<!-- ----------------------AGREGAR VIDEOS 1 -------------------------------------- -->
+				<div class="clear"></div>
+						<div class="item-videos">
+							<?php if($videos) { 
+								foreach ($videos as $key => $video) {
+									$video_id = $video->ID;
+									$video_mime_type = $video->post_mime_type;
+									$video_url = wp_get_attachment_url($video_id);
+									echo'<video controls ><source src="'.$video_url.'" type="'.$video_mime_type.'"></video>';
+								}
+							}
+							?>
+						</div> <!-- item-videos -->
+						<div class="clear"></div>
+		<!-- ------------------------- FIN AGREGAR VIDEOS ------------------------------------- -->
 						<div class="clear30 hide-is-mobile"></div>
 						<div class="clear"></div>
 					</div> <!-- item-details3 -->
@@ -734,6 +749,11 @@ get_header(); ?>
 							$full_img_url_array[] = $full_img_url;
 							$photo_html =  wp_get_attachment_image_src( $photo->ID, 'gallery-thumb' );
 							$photo_html = '<img data-preview-th="'.$preview_thumb_url[0].'" data-full-img="'.$full_img_url[0].'" data-index="'.$key.'" src="'.$photo_html[0].'" alt="" class="gallery-thumb" />';
+							if ($photo->post_mime_type == 'video/mp4'){
+								$video_html =  wp_get_attachment_url( $photo->ID );
+								$photo_html = '<img data-preview-th="'.$video_html.'" data-full-img="'.$video_html.'" data-index="'.$key.'" src="'.$video_html.'" alt="" class="gallery-thumb" />';
+							}
+							
 							echo $photo_html;
 						}
 						?>
@@ -749,24 +769,7 @@ get_header(); ?>
 			<div class="clear"></div>
 		</div> <!-- item-images -->
 
-		<!-- ----------------------AGREGAR VIDEOS 1 -------------------------------------- -->
-				<div class="clear"></div>
-						<div class="item-videos">
-							<?php if($videos) { ?>
-								<div class="html5gallery" data-skin="darkness" data-width="480" data-height="272" >
-										<?php
-										foreach ($videos as $key => $video) {
-											$index = $key;
-											$video_id = $video->ID;
-											$video_mime_type = $video->post_mime_type;
-											$video_url = wp_get_attachment_url($video_id);
-											echo'<a href="'.$video_url.'"><img src="'.$video_mime_type.'" alt="'.$video->post_title.'"></a></div>';
-										} ?>										
-									</div> <!-- html5gallery -->
-							<?php } ?>
-						</div> <!-- item-videos -->
-						<div class="clear"></div>
-		<!-- ------------------------- FIN AGREGAR VIDEOS ------------------------------------- -->
+
 
 		<?php get_template_part('includes/image-lightbox-html-code'); ?>
 		<script type="text/javascript">

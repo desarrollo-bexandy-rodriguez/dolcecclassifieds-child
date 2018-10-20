@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
 //upload videos START
 	// Simulate a click on the file input button
 	$('.post-form .video-upload').on('click', function(event) {
-		$('.upload-video-button-container input[type="file"]').last().attr('accept', 'video/mp4', 'video/webm', 'video/ogg', 'video/quicktime, .mp4, .webm, .ogv, .mov');
+		$('.upload-video-button-container input[type="file"]').last().attr('accept', 'video/mp4, video/webm, video/ogg, video/quicktime, .mp4, .webm, .ogv, .mov');
 		if($('.post-form .video-upload .max-vid').text() > 0) {
 			$('.upload-video-button-container input[type="file"]').last().click();
 		} else {

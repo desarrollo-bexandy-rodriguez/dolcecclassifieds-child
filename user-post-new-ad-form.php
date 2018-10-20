@@ -359,7 +359,7 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 					'dnd'            : true,
 					'dropTarget'     : '.drag-videos-overlay',
 					'fileSizeLimit'  : '<?=get_option('max_video_size')?>MB',
-					'fileType'       : ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'],
+					'fileType'       : 'video/mp4' | 'video/webm' | 'video/ogg' | 'video/quicktime',
 					'formData'       : { 'post_id' : '<?=$post_id_to_edit?>', 'session_code' : '<?=$session_code?>' },
 					'multi'          : true,
 					'queueID'        : 'uploaded-videos-queue',
