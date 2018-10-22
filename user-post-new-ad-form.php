@@ -338,9 +338,6 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 	</section> <!-- images -->
 
 	<!--- --------------------AGREGAR VIDEOS-------------------------- ------>
-	<div>
-		<h1>Prueba Child</h1>
-	</div>
 
 	<section class="videos">
 		<div class="clear20"></div>
@@ -406,8 +403,8 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 						}
 						if(is_json) {
 							if(data.status == "ok") {
-								//add the new image in the image preview
-								$('<div class="one-vid" data-attachment-id="'+data.attachment_id+'"><video controls class="preview-vid rad3"><source src="'+data.attachment_url+'" type="'+data.attachment_mime_type+'" /></video><div class="clear5"></div><div class="remove rad17"><span class="icon icon-delete"></span> '._d('Remove',469).'</div></div>').hide().insertAfter('.post-form .uploaded-videos .uploaded-videos-message').fadeIn("slow");
+								//add the new video in the video preview
+								$('<div class="one-vid" data-attachment-id="'+data.attachment_id+'"><video controls class="preview-vid rad3"><source src="'+data.attachment_url+'" type="'+data.attachment_mime_type+'" /></video><div class="clear5"></div><div class="remove rad17"><span class="icon icon-delete"></span> <?=addslashes(_d('Remove',469))?></div></div>').hide().appendTo('.post-form .uploaded-videos').fadeIn("slow");
 
 								if($('.post-form .uploaded-videos .one-vid').length >= "1" && !$('.post-form input[name="main_video"]').val()) {
 									$('.post-form .uploaded-videos .one-vid[data-attachment-id="'+data.attachment_id+'"]').find('.main-video').show().parent().find('.mark-as-main').hide();
@@ -514,7 +511,7 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 			}
 			?>
 			<span class="no-videos-uploaded<?=$first_message_class?>"><?=_d('You can upload a maximum of %s videos',1016,'<span class="max-vid rad5">'.$videos_left.'</span>')?></span>
-			<span class="videos-have-been-uploaded<?=$second_message_class?>"><?=_d('You have %s videos left',1017,'<span class="max-img rad5">'.$videos_left.'</span>')?></span>
+			<span class="videos-have-been-uploaded<?=$second_message_class?>"><?=_d('You have %s videos left',1017,'<span class="max-vid rad5">'.$videos_left.'</span>')?></span>
 			<div class="clear"></div>
 		</div>
 		<div class="drag-videos-overlay text-center hide"><div class="vcenter"><span class="child-icon child-icon-video"></span> <?=_d('Drop your videos here',1018)?></div></div>
@@ -524,13 +521,6 @@ $videos_left = get_option('maximum_videos_to_upload') - count($videos);
 		<div class="clear"></div>
 
 		<div class="uploaded-videos">
-			<input type="hidden" name="main_video" value="<?=get_post_thumbnail_id($post_id_to_edit)?>" />
-			<?php
-			if(count($videos) > 0) {
-				$show_main_video_message = true;
-			}
-			?>
-			<div class="uploaded-videos-message text-center<?php if(!$show_main_video_message) echo ' hide'; ?>"><?=_d('Click an video to select it as the main video for the ad',1019)?><div class="clear5"></div></div>
 			<?php
 			foreach($videos as $key => $video) {
 				$attachment_id = $video->post_id ? $video->post_id : $video->ID;

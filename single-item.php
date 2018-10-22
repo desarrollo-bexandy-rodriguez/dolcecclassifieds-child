@@ -89,6 +89,7 @@ get_header(); ?>
 				?>
 				<li class="rad3 edit <?=$li_class?>"><span class="icon icon-edit"></span><span class="text"><?=_d('Edit ad',503)?></span></li>
 				<li class="rad3 edit-images <?=$li_class?>"><span class="icon icon-pictures"></span><span class="text"><?=_d('Edit Images',504)?></span></li>
+				<li class="rad3 edit-videos <?=$li_class?>"><span class="child-icon child-icon-video"></span><span class="text"><?=_d('Edit Videos',1029)?></span></li>
 				<li class="rad3 pause <?=$li_class?><?php if(get_post_status(get_the_ID()) == 'private' || get_post_meta(get_the_ID(), 'expired')) { echo " paused"; if((get_post_meta(get_the_ID(), 'needs_activation', true) == '1' || get_post_meta(get_the_ID(), 'needs_payment', true) == '1') && !current_user_can('level_10')) { echo " paused-blocked"; } } ?>"
 						data-default="<?=_d('Pause Ad',505)?>" data-paused="<?=_d('Paused',506)?>"
 

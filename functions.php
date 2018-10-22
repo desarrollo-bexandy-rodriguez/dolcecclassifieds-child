@@ -75,6 +75,45 @@ function my_ajax_filter() {
 update_option('maximum_videos_to_upload', '2');
 update_option('max_video_size', '10');
 
+function child_dequeue_script() {
+    wp_dequeue_script( 'dolcejs' );
+    wp_dequeue_script( 'responsivejs' );
+}
+add_action( 'wp_print_scripts', 'child_dequeue_script', 100 );
+
+function child_add_js_css() {
+    wp_enqueue_script('child-responsivejs', get_stylesheet_directory_uri().'/js/child-responsive.js', array( 'jquery' ));
+    wp_enqueue_script('child-dolcejs', get_stylesheet_directory_uri().'/js/child-dolceclassifieds.js', array( 'jquery' ));
+    wp_localize_script('child-dolcejs', 'wpvars', array( 'wpthemeurl' => get_template_directory_uri() ));
+}
+add_action('wp_enqueue_scripts', 'child_add_js_css');
+
+function child_shortcode_whatsapp_chat( $atts, $content = null ) {
+    extract(shortcode_atts(array(
+        'phone'      => '#',
+        'blank'     => 'false'
+    ), $atts));
+
+    $blank_link = '';
+
+    if ( $blank == 'true' )
+        $blank_link = "target=\"_blank\"";
+
+    $target='';
+
+    if (wp_is_mobile() ) {
+        $target='api';
+    } else {
+        $target='web';
+    }
+
+    $out = "<div class=\"child-whatsapp\"><a class=\"awhatsapp\" href=\"https://".$target.".whatsapp.com/send?phone=" .$phone. "\"" .$blank_link."><span>" .do_shortcode($content). "</span></a></div>";
+
+    return $out;
+}
+add_shortcode('childwhatsapp', 'child_shortcode_whatsapp_chat');
+
+
 function child_restore_default_language() {
     // add languages
     $words = array(
@@ -1079,6 +1118,7 @@ function child_restore_default_language() {
         '1010' => 'Language locale',
         '1011' => 'Deselect all',
         '1012' => 'Your Facebook OAuth Redirect URI is',
+        // Add Videos Issue
         '1013' => 'Drag your videos here to upload them or',
         '1014' => 'Sorry, but you uploaded the maximum number of allowed videos',
         '1015' => 'Too many videos!',
@@ -1095,6 +1135,7 @@ function child_restore_default_language() {
         '1026' => 'This file doesn\'t seem to be an video',
         '1027' => 'more videos',
         '1028' => 'Your video is bigger than',
+        '1029' => 'Edit Videos',
 
 
         // Auto Classifieds Language strings
