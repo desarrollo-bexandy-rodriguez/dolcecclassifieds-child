@@ -313,3 +313,83 @@ label[for="amount"] {
 	max-width: 330px;
 	max-height: 240px;
 }
+
+.item-page .edit-ad-menu li.active .child-icon,
+ {
+	color: #fff !important;
+    text-shadow: none !important;
+}
+
+.item-page .edit-ad-menu li .child-icon {
+    color: #22a4e6;
+    font-size: 1.09em;
+    padding-bottom: 5px;
+}
+
+
+
+.item-page .edit-ad-menu li .child-icon, 
+.item-page .edit-ad-menu li .text {
+    display: block;
+    text-align: center;
+    text-shadow: 1px 1px #fff;
+}
+
+.is-phone .item-page .edit-ad-menu .edit-ad-buttons .for-admin {
+	width: 14% !important;
+}
+.is-phone .item-page .edit-ad-menu .edit-ad-buttons .for-user {
+	width: 20%;
+}
+
+/****************************** FOOTER ******************************************/
+
+footer {
+	/*background: #FB7E95 !important;*/
+	background: #1c242e !important;
+}
+
+footer .footer-end {
+    background: #FB1843 !important;
+}
+
+
+element.style {
+    width: 100px;
+}
+footer .widgetbox a {
+    color: #fff;
+}
+
+footer .widgetbox {
+    /*padding: 0px 20px !important;*/
+}
+
+footer .widget-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+div.child-whatsapp {
+    min-width: 50px;
+    max-width: 150px;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin: 0 auto 0 auto;
+    background: #20B038; 
+    border-radius: 10px;
+    -webkit-transition: All 0.5s ease;
+    -moz-transition: All 0.5s ease;
+    -o-transition: All 0.5s ease;
+    -ms-transition: All 0.5s ease;
+    transition: All 0.5s ease;
+}
+
+div.child-whatsapp:before {
+    font-family: "IcoMoon-free" !important;
+    content: '\ea93' !important;
+    margin-left: -38px;
+    margin-right: 5px;
+}

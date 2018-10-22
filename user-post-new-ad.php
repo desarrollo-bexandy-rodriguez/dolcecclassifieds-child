@@ -13,7 +13,6 @@ Template Name: Post new ad
 get_header();
 ?>
 
-<h1>AD FORM CHILD</h1>
 <div class="post-new-ad">
 	<div class="ad-steps-tabs">
 		<div class="col-33 l text-center ad-step-wrapper">
