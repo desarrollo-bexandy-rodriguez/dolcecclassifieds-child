@@ -314,7 +314,7 @@ label[for="amount"] {
 	max-height: 240px;
 }
 
-.item-page .edit-ad-menu li.active .child-icon,
+.item-page .edit-ad-menu li.active .child-icon
  {
 	color: #fff !important;
     text-shadow: none !important;
@@ -373,7 +373,7 @@ footer .widget-footer {
 
 div.child-whatsapp {
     min-width: 50px;
-    max-width: 150px;
+    max-width: 190px;
     color: #fff;
     text-align: center;
     padding: 10px;
@@ -390,6 +390,6 @@ div.child-whatsapp {
 div.child-whatsapp:before {
     font-family: "IcoMoon-free" !important;
     content: '\ea93' !important;
-    margin-left: -38px;
+    margin-left: 0px;
     margin-right: 5px;
 }
