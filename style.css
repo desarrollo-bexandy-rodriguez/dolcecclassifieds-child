@@ -311,7 +311,7 @@ label[for="amount"] {
 
 .item-page  .item-videos video {
 	max-width: 330px;
-	max-height: 240px;
+	max-height: 300px;
 }
 
 .item-page .edit-ad-menu li.active .child-icon
@@ -369,6 +369,13 @@ footer .widget-footer {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    flex-direction: row;
+}
+
+@media screen and (max-width: 900px){
+	footer .widget-footer {
+	    flex-direction: column;
+	}
 }
 
 div.child-whatsapp {
@@ -392,4 +399,48 @@ div.child-whatsapp:before {
     content: '\ea93' !important;
     margin-left: 0px;
     margin-right: 5px;
+}
+
+/****************************** SPLASH PAGE ******************************************/
+
+@media screen and (max-width: 601px){
+
+	.title__age {
+	    margin-bottom: 10px !important;
+	    font-size: 14px !important;
+	}
+
+	.title__age input {
+	  text-align: center;
+	  width: auto !important;
+	  padding: 2px 2px !important;
+	  margin: 0 10px !important;
+	  height: auto !important;
+	}
+
+	.title__description {
+	  margin-bottom: 10px !important;
+	}
+
+	.title__opt-in {
+	  margin: 0 0 10px !important;
+	  font-size: 14px !important;
+	}
+
+	.title__age h3 {
+	  font-size: 16px !important;
+	  margin-bottom: 10px !important;
+	}
+	
+	 .title__action .btn, button, input[type="submit"], input[type="button"] {
+	  padding: .5rem 1rem !important;
+	}
+
+	.hero-section__words {
+	  width: auto !important;
+	}
+
+	.title__heading {
+	  font-size: 1.5rem !important;
+	}
 }

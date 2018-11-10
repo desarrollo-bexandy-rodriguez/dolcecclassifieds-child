@@ -507,16 +507,22 @@ get_header(); ?>
 
 							<div class="clear"></div>
 						</div> <!-- item-conditions -->
-										<!-- ----------------------AGREGAR VIDEOS 1 -------------------------------------- -->
+		<!-- ----------------------AGREGAR VIDEOS 1 -------------------------------------- -->
 				<div class="clear"></div>
 						<div class="item-videos">
-							<?php if($videos) { 
+							<?php if($videos) { ?>
+							<div id="sliderFrame">
+							    <div id="slider">
+								<?php
 								foreach ($videos as $key => $video) {
 									$video_id = $video->ID;
 									$video_mime_type = $video->post_mime_type;
 									$video_url = wp_get_attachment_url($video_id);
-									echo'<video controls ><source src="'.$video_url.'" type="'.$video_mime_type.'"></video>';
-								}
+									echo'<video data-image="'.$video_url.'" data-autovideo="1"controls ><source src="'.$video_url.'" type="'.$video_mime_type.'"></video>';
+								}?>
+								</div>
+							</div>
+							<?php
 							}
 							?>
 						</div> <!-- item-videos -->
