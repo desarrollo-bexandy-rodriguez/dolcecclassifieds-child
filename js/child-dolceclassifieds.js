@@ -21,7 +21,7 @@ jQuery(document).ready(function($) {
 
 	$('.welcoming-message').on('click', '.hide-welcoming-message', function(event) {
 		$('.welcoming-message-wrapper').slideUp('fast');
-		$.post(wpvars.wpthemeurl+'/ajax/save-settings.php', { action: 'hide-welcoming-message' });
+		$.post(wpvars.wpchildthemeurl+'/ajax/child-save-settings.php', { action: 'hide-welcoming-message' });
 	});
 
 	var hash = window.location.hash.replace('#', '');
@@ -1801,7 +1801,7 @@ jQuery(document).ready(function($) {
 		form.find('.err-msg, .form-msg').slideUp(200, function(){ $(this).text(''); });
 		form.find('.input-err').removeClass('input-err');
 		form.find('.submit-button').attr('class', function(i, c){ return c.replace(/(^|\s)submit-button-\S+/g, ''); }).addClass('submit-button-loading').find('.text-default').hide();
-		$.post(wpvars.wpthemeurl+'/ajax/save-settings.php', { action: action, form_data: form_data }, function(raw_data, textStatus, xhr) {
+		$.post(wpvars.wpchildthemeurl+'/ajax/child-save-settings.php', { action: action, form_data: form_data }, function(raw_data, textStatus, xhr) {
 			var is_err = false;
 			var is_json = true;
 			try {
@@ -2271,7 +2271,7 @@ jQuery(document).ready(function($) {
 				return new Promise(function(resolve, reject) {
 					$.ajax({
 						type: "POST",
-						url: wpvars.wpthemeurl+'/ajax/save-settings.php',
+						url: wpvars.wpchildthemeurl+'/ajax/child-save-settings.php',
 						data: { action: 'delete-account', form_data: [{name: 'userid', value: button.data('user-id') }] },
 						cache: false,
 						timeout: 30000, // in milliseconds
@@ -2392,7 +2392,7 @@ jQuery(document).ready(function($) {
 		form.find('.form-ok').hide();
 		$.ajax({
 			type: "POST",
-			url: wpvars.wpthemeurl+'/ajax/save-settings.php',
+			url: wpvars.wpchildthemeurl+'/ajax/child-save-settings.php',
 			data: { action: 'remove_demo_ads' },
 			cache: false,
 			timeout: 300000, // in milliseconds
@@ -2847,7 +2847,7 @@ jQuery(document).ready(function($) {
 		var button = $(this);
 		if(!button.hasClass('submit-button-default')) return false;
 		button.attr('class', function(i, c){ return c.replace(/(^|\s)submit-button-\S+/g, ''); }).addClass('submit-button-loading');
-		$.post(wpvars.wpthemeurl+'/ajax/save-settings.php', {action: 'ask-for-verification'}, function(data) {
+		$.post(wpvars.wpchildthemeurl+'/ajax/child-save-settings.php', {action: 'ask-for-verification'}, function(data) {
 			if(data.trim() == "ok") {
 				button.attr('class', function(i, c){ return c.replace(/(^|\s)submit-button-\S+/g, ''); }).addClass('submit-button-done');
 			} else {
