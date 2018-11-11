@@ -170,17 +170,27 @@ if(!defined('private_messages_plugin')) {
 					$('input[name="payment_mycred"]').on('change', function(event) {
 						var id = $(this).parents('.tab').attr('id');
 						var icon = $('.payment-options .payment-tab[data-tab="'+id+'"] .icon');
-						var icon_paypal = $('.payment-options .payment-tab[data-tab="paypal"] .icon');
-						var icon_stripe = $('.payment-options .payment-tab[data-tab="stripe"] .icon');
-						var input_paypal = $('input[name="payment_paypal"]');
-						var input_stripe = $('input[name="payment_stripe"]');
 						if($(this).val() == "1") { 
 							icon.show(); 
-							icon_paypal.hide(); 
-							icon_stripe.hide(); 
-							input_paypal.val(2);
-							input_stripe.val(2);
-						} else { icon.hide(); }
+							$('.payment-options .payment-tab[data-tab="paypal"] .icon').hide(); 
+							$('.payment-options .payment-tab[data-tab="stripe"] .icon').hide(); 
+							$('input[name="payment_paypal"]').val(2);
+							$('input[name="payment_stripe"]').val(2);
+							$('input[name="payment_currency"]').val('Crédito');
+							$('input[name="payment_currency_symbol_before"]').val('');
+							$('input[name="payment_currency_symbol_after"]').val('Cre');
+							$('input[name="payment_currency"]').attr("readonly","readonly");
+							$('input[name="payment_currency_symbol_before"]').attr("readonly","readonly");
+							$('input[name="payment_currency_symbol_after"]').attr("readonly","readonly");
+						} else { 
+							icon.hide(); 
+							$('input[name="payment_currency"]').val('');
+							$('input[name="payment_currency_symbol_before"]').val('');
+							$('input[name="payment_currency_symbol_after"]').val('');
+							$('input[name="payment_currency"]').removeAttr("readonly");
+							$('input[name="payment_currency_symbol_before"]').removeAttr("readonly");
+							$('input[name="payment_currency_symbol_after"]').removeAttr("readonly");
+						}
 					});
 
 
@@ -208,7 +218,9 @@ if(!defined('private_messages_plugin')) {
 			<div class="payment-options text-center l rad5">
 				<div class="payment-tab round-corners-button rad25 l" data-tab="paypal">PayPal <span class="icon icon-circle<?php if($payment_paypal != "1") { echo " hide"; } ?>"></span></div>
 				<div class="payment-tab round-corners-button rad25 l" data-tab="stripe">Stripe <span class="icon icon-circle<?php if($payment_stripe != "1") { echo " hide"; } ?>"></span></div>
+				<?php if (class_exists( 'myCRED_Core' )) { ?>
 				<div class="payment-tab round-corners-button rad25 l" data-tab="mycred">MyCred <span class="icon icon-circle<?php if($payment_mycred != "1") { echo " hide"; } ?>"></span></div>
+				<?php } ?>
 				<div class="clear"></div>
 			</div>
 			<div class="clear20"></div>
@@ -400,6 +412,7 @@ if(!defined('private_messages_plugin')) {
 			<div class="form-label">
 				<label class="label" for="payment_currency"><?=_d('Payments currency code',228)?> <span class="mandatory icon icon-asterisk"></span></label>
 			</div> <!-- form-label -->
+
 			<div class="form-input">
 				<div class="err-msg hide"></div>
 				<input type="text" name="payment_currency" maxlength="3" value="<?=$payment_currency?>" id="payment_currency" class="input text-center" size="6" />
@@ -419,8 +432,7 @@ if(!defined('private_messages_plugin')) {
 				<div class="help"><b>!</b> <?=_d('add your currency symbol before or after the amount, depending on the standard for the currency',232)?></div>
 				<div class="help"><b>!</b> <?=_d('the symbol will be used next to the prices in your site. if no symbol is added then the 3 letter currency code will be used.',233)?></div>
 			</div> <!-- form-input --> <div class="formseparator"></div>
-
-
+			
 			<div class="clear30"></div>
 			<h4><?=_d('Choose your payment options',833)?></h4>
 			<div class="clear30"></div>

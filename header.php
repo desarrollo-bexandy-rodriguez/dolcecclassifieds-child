@@ -395,16 +395,17 @@ if($email_key) {
 
 		<div>
 		<?php 
-			$point_type = 'mytype';
-			$mycred     = mycred( $point_type );
-			// Make sure user is not excluded
-			if ( ! $mycred->exclude_user( $current_user->ID ) ) {
-				// get users balance
-				$balance = $mycred->get_users_balance( $current_user->ID );
-				// adjust a users balance
-				echo 'My Balance: '.$balance;
-			}
-		 
+			if (class_exists( 'myCRED_Core' )) {
+				$point_type = 'mytype';
+				$mycred     = mycred( $point_type );
+				// Make sure user is not excluded
+				if ( ! $mycred->exclude_user( $current_user->ID ) ) {
+					// get users balance
+					$balance = $mycred->get_users_balance( $current_user->ID );
+					// adjust a users balance
+					echo 'My Balance: '.$balance;
+				}
+			}		 
 		?>
 		</div> 
 
