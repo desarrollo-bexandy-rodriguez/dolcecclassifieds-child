@@ -90,9 +90,10 @@ add_action( 'wp_print_scripts', 'child_dequeue_script', 100 );
 function child_add_js_css() {
     wp_enqueue_script('child-responsivejs', get_stylesheet_directory_uri().'/js/child-responsive.js', array( 'jquery' ));
     wp_enqueue_script('child-dolcejs', get_stylesheet_directory_uri().'/js/child-dolceclassifieds.js', array( 'jquery' ));
-    wp_localize_script('child-dolcejs', 'wpvars', array( 'wpthemeurl' => get_template_directory_uri() ));
-    wp_localize_script('child-dolcejs', 'wpvars', array( 'wpchildthemeurl' => get_stylesheet_directory_uri() ));
-    wp_localize_script('dolcejs', 'wpvars', array( 'wpchildthemeurl' => get_stylesheet_directory_uri() ));
+    wp_localize_script('child-dolcejs', 'wpvars', array( 
+        'wpthemeurl' => get_template_directory_uri(), 
+        'wpchildthemeurl' => get_stylesheet_directory_uri() 
+    ));
 }
 add_action('wp_enqueue_scripts', 'child_add_js_css');
 
@@ -2216,3 +2217,120 @@ function child_restore_default_language() {
         update_option('dolce_languages', $languages);
     }
 }
+
+
+function child_generate_payment_option_form($payment_name, $form_payment_data="", $user_type) {
+	global $payment_duration_types;
+	$payment_currency = get_option('payment_currency');
+	$payment_data = get_option('payment_'.$payment_name.'_data');
+	if (class_exists( 'myCRED_Core' )) {
+		$payment_mycred = get_option('payment_mycred');
+		if ($payment_mycred == '1' && $payment_name == 'user_reg') {
+			return 'Option not enabled to MyCred Gateway Payment';
+		}
+	}
+	// if(!$form_payment_data[$user_type]) $form_payment_data[$user_type] = array(array());
+	// [payment_name]
+	// 	[personal] // user_type
+	// 		[1] // plan
+	// 			[price] => [100]
+	// 			[duration] => [10]
+	// 		[2] // plan
+	// 			[price] => [100]
+	// 			[duration] => [10]
+	// 	[business] // user_type
+	// 		[1] // plan
+	// 			[price] => [100]
+	// 			[duration] => [10]
+	// 		[2] // plan
+	// 			[price] => [100]
+	// 			[duration] => [10]
+	// TO DO foreach (array("first", "second") as $plan_id) {
+	foreach (array("first") as $plan_id) {
+		if($plan_id == "second" && !$payment_data[$user_type][$plan_id]['price'] && !$payment_data[$user_type][$plan_id]['duration']) {
+			$extra_class_div = " hide";
+		}
+		if($plan_id == "first" && ($payment_data[$user_type]['second']['price'] || $payment_data[$user_type]['second']['duration'])) {
+			$extra_style_button = ' style="display: none"';
+		}
+	?>
+		<div class="<?=$plan_id?>-payment-plan<?=$extra_class_div?>">
+			<div class="form-label">
+				<label class="label" for="payment_<?=$payment_name?>_price_<?=$user_type?>_<?=$plan_id?>"><?=_d('Price',236)?></label>
+			</div> <!-- form-label -->
+			<div class="form-input">
+				<div class="err-msg hide"></div>
+				<input type="text" 
+					name="payment_<?=$payment_name?>_price[<?=$user_type?>][<?=$plan_id?>]" 
+					value="<?=$payment_data[$user_type][$plan_id]['price']?>" 
+					id="payment_<?=$payment_name?>_price_<?=$user_type?>_<?=$plan_id?>" 
+					class="input text-center" 
+					size="10" 
+				/> 
+				<span class="payments-currency"><?=$payment_currency?></span>
+			</div> <!-- form-input --> <div class="formseparator"></div>
+
+			<div class="form-label">
+				<label class="label" for="payment_<?=$payment_name?>_duration_<?=$user_type?>_<?=$plan_id?>">
+				<?php
+					if($payment_name[$user_type] == "push") {
+						_de('Push each day for',248);
+					} else {
+						_de('Payment will last for',237);
+					}
+				?>
+				</label>
+			</div> <!-- form-label -->
+			<div class="form-input">
+				<div class="err-msg hide"></div>
+				<input type="text" 
+					name="payment_<?=$payment_name?>_duration[<?=$user_type?>][<?=$plan_id?>]" 
+					value="<?=$payment_data[$user_type][$plan_id]['duration']?>" 
+					id="payment_<?=$payment_name?>_duration_<?=$user_type?>_<?=$plan_id?>" 
+					class="input text-center l" 
+					size="10" 
+				/>
+				<div class="fake-select equal-input fake-select-duration rad3 no-selection l">
+					<div class="first"><span class="text l"></span> <span class="icon icon-arrow-up hide"></span><span class="icon icon-arrow-down"></span></div>
+					<div class="options rad5 shadow hide">
+						<?php
+						foreach ($payment_duration_types as $key => $value) {
+							$selected = ($payment_data[$user_type][$plan_id]['durationtype'] == $key) ? ' selected' : '';
+							echo '<div data-value="'.$key.'" class="option'.$selected.'">'.$value['0'].'</div>';
+						}
+						?>
+					</div> <!-- options -->
+					<input type="hidden" name="payment_<?=$payment_name?>_durationtype[<?=$user_type?>][<?=$plan_id?>]" value="<?=$payment_data[$user_type][$plan_id]['durationtype']?>" />
+				</div> <!-- fake-selector -->
+				<div class="help"><b>!</b> <?=_d('Leaving this empty means the upgrade will never expire',238)?></div>
+			</div> <!-- form-input --> <div class="formseparator"></div>
+
+			<div class="form-label">
+				<label class="label" for="payment_<?=$payment_name?>_recurring_<?=$user_type?>_<?=$plan_id?>"><?=_d('Recurring payments?',239)?></label>
+			</div> <!-- form-label -->
+			<div class="form-input">
+				<div class="err-msg hide"></div>
+				<div class="toggle rad25 l">
+					<div data-value="1" class="toggle-text toggle-yes l<?php if($payment_data[$user_type][$plan_id]['recurring'] != "1") { echo ' hide'; } ?>"><?=_d('yes',85)?></div>
+					<div class="pin l">&nbsp;</div>
+					<div data-value="2" class="toggle-text toggle-no r<?php if($payment_data[$user_type][$plan_id]['recurring'] != "2" && $payment_data[$user_type][$plan_id]['recurring']) { echo ' hide'; } ?>"><?=_d('no',86)?></div>
+					<input type="hidden" class="input" maxlength="1" name="payment_<?=$payment_name?>_recurring[<?=$user_type?>][<?=$plan_id?>]" value="<?=$payment_data[$user_type][$plan_id]['recurring']?>" />
+				</div> <!-- toggle -->
+			</div> <!-- form-input --> <div class="clear"></div>
+
+			<?php /* TO DO if($plan_id == "first") { ?>
+			<div class="add_extra_payment_plan_wrapper text-center">
+				<div class="and-then-wrapper"><div class="and-then rad3"><?=_d('after this continue with',837)?>:</div></div>
+				<div class="clear"></div>
+				<div class="add_extra_payment_plan"<?=$extra_style_button?>><span class="icon icon-plus"></span></div>
+			</div> <!-- add_extra_payment_plan_wrapper -->
+			<?php } ?>
+			<?php if($plan_id == "second") { ?>
+			<div class="remove_extra_payment_plan_wrapper text-center">
+				<div class="remove_extra_payment_plan"><span class="icon icon-cancel"></span></div>
+			</div> <!-- remove_extra_payment_plan_wrapper -->
+			<?php } */ ?>
+		</div> <!-- <?=$plan_id?>-payment-plan -->
+	<?php
+	} // foreach ($form_payment_data[$user_type] as $key => $payment_data) {
+} // function generate_payment_option_form($input_name)

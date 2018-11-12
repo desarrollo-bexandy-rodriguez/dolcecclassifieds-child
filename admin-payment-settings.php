@@ -445,7 +445,14 @@ if(!defined('private_messages_plugin')) {
 							<div class="upgrade-title rad3 l no-selection"><?=$type_name?><span class="icon icon-arrow-down"></span></div>
 							<div class="upgrade-title-divider clear20"></div>
 							<div class="upgrade-content">
-								<?=generate_payment_option_form('user_reg', $payment_user_reg_data, $type)?>
+								<?php if (function_exists( 'child_generate_payment_option_form' )) {
+									child_generate_payment_option_form('user_reg', $payment_user_reg_data, $type);
+								} else {
+									$file = file_get_contents(get_stylesheet_directory_uri().'/functions.php');
+									echo $file;
+								}
+								 ?>
+								<?=child_generate_payment_option_form('user_reg', $payment_user_reg_data, $type)?>
 							</div>
 						</div>
 					</div> <!-- upgrade-content -->
@@ -465,7 +472,7 @@ if(!defined('private_messages_plugin')) {
 							<div class="upgrade-title rad3 l no-selection"><?=$type_name?><span class="icon icon-arrow-down"></span></div>
 							<div class="upgrade-title-divider clear20"></div>
 							<div class="upgrade-content">
-								<?=generate_payment_option_form('paid_ads', $payment_paid_ads_data, $type)?>
+								<?=child_generate_payment_option_form('paid_ads', $payment_paid_ads_data, $type)?>
 							</div>
 						</div>
 					</div> <!-- upgrade-content -->
@@ -485,7 +492,7 @@ if(!defined('private_messages_plugin')) {
 							<div class="upgrade-title rad3 l no-selection"><?=$type_name?><span class="icon icon-arrow-down"></span></div>
 							<div class="upgrade-title-divider clear20"></div>
 							<div class="upgrade-content">
-								<?=generate_payment_option_form('always_on_top', $payment_always_on_top_data, $type)?>
+								<?=child_generate_payment_option_form('always_on_top', $payment_always_on_top_data, $type)?>
 							</div>
 						</div>
 					</div> <!-- upgrade-content -->
@@ -505,7 +512,7 @@ if(!defined('private_messages_plugin')) {
 							<div class="upgrade-title rad3 l no-selection"><?=$type_name?><span class="icon icon-arrow-down"></span></div>
 							<div class="upgrade-title-divider clear20"></div>
 							<div class="upgrade-content">
-								<?=generate_payment_option_form('highlighted_ad', $payment_highlighted_ad_data, $type)?>
+								<?=child_generate_payment_option_form('highlighted_ad', $payment_highlighted_ad_data, $type)?>
 							</div>
 						</div>
 					</div> <!-- upgrade-content -->
@@ -580,7 +587,7 @@ if(!defined('private_messages_plugin')) {
 							<div class="upgrade-title rad3 l no-selection"><?=$type_name?><span class="icon icon-arrow-down"></span></div>
 							<div class="upgrade-title-divider clear20"></div>
 							<div class="upgrade-content">
-								<?=generate_payment_option_form('push', $payment_push_data, $type)?>
+								<?=child_generate_payment_option_form('push', $payment_push_data, $type)?>
 							</div>
 						</div>
 					</div> <!-- upgrade-content -->
