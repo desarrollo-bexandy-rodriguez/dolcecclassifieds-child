@@ -159,7 +159,7 @@ get_header(); ?>
 		<div class="page-section buy-upgrades<?php if(get_post_meta(get_the_ID(), 'needs_payment', true) != "1") { echo " hide"; } ?>">
 			<div class="page-section-close round-corners-button rad17 l"><span class="icon icon-arrow-left"></span> <?=_d('Back to the ad',522)?></div>
 			<div class="clear"></div>
-			<?php ad_needs_payment_html(get_the_ID()); ?>
+			<?php child_ad_needs_payment_html(get_the_ID()); ?>
 			<div class="clear40"></div>
 		</div>
 		<?php } ?>

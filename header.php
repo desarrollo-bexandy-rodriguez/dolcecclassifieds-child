@@ -392,23 +392,6 @@ if($email_key) {
 			<div class="clear"></div>
 		</div> <!-- logo -->
 
-
-		<div>
-		<?php 
-			if (class_exists( 'myCRED_Core' )) {
-				$point_type = 'mytype';
-				$mycred     = mycred( $point_type );
-				// Make sure user is not excluded
-				if ( ! $mycred->exclude_user( $current_user->ID ) ) {
-					// get users balance
-					$balance = $mycred->get_users_balance( $current_user->ID );
-					// adjust a users balance
-					echo 'My Balance: '.$balance;
-				}
-			}		 
-		?>
-		</div> 
-
 		<?php if ( is_active_sidebar( 'widget-header' ) ) { ?>
 			<div class="clear10"></div>
 			<div class="header-widget">

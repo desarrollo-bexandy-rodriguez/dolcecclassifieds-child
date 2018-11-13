@@ -444,3 +444,15 @@ div.child-whatsapp:before {
 	  font-size: 1.5rem !important;
 	}
 }
+
+/****************************** MyCred AutoRenova ******************************************/
+
+.ad-needs-payment-section .payment-buttons .pay-button-mycred {
+	line-height: 1em;
+}
+
+.mycred-balance {
+	float: right;
+	padding: 10px 5px;
+	text-align: right;
+}
