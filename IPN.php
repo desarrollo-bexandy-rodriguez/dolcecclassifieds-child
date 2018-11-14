@@ -1184,10 +1184,9 @@ if($_GET['processor'] == "mycred") {
 	if ( ! $mycred->exclude_user( $author_id ) ) {
 		// get users balance
 		$balance = $mycred->get_users_balance( $author_id );
-		// error if the user is not the author
+		// error if user not have founds
 		if($product_price >  $balance)
 			die(json_encode(array('status' => 'err', 'msg' => 'You dont have enought credits')));
-		
 		// Adjust balance with a log entry
 		$mycred->add_creds(
 			'reference',
