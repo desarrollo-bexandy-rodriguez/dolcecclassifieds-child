@@ -838,7 +838,7 @@ jQuery(document).ready(function($) {
 			if(!value && $(this).find('.first .text').text().length == "0") {
 				value = $(this).find('.options .option').first().data('value');
 			}
-			$(this).find('.first .text').html($(this).find('.option[data-value="'+value+'"]').html()).children().not('img').remove();
+			$(this).find('.first .text').html($(this).find('.option[data-value="'+value+'"]').text()).children().not('img').remove();
 			$(this).find(':input').last().val($(this).find('.option[data-value="'+value+'"]').data('value')); // in case the input is empty
 			$(this).find('.options .selected').removeClass('selected');
 			$(this).find('.option[data-value="'+value+'"]').addClass('selected');
@@ -890,7 +890,7 @@ jQuery(document).ready(function($) {
 			// if both icons are hidden then don't toggle them
 			select.find('.icon-arrow-up, .icon-arrow-down').toggle();
 		}
-		select.find('.first .text').html($(this).html()).children().not('img').remove();
+		select.find('.first .text').html($(this).text()).children().not('img').remove();
 		select.find(':input').first().val('');
 		select.find('.option').show();
 		select.removeClass('parent-bigger-than-select');

@@ -2548,6 +2548,17 @@ function child_ad_needs_payment_html($post_id="") {
             '365' => '1 '._d('year',457),
         );
 
+    $duration_push_list = array(
+            '0' => _d('Never',451),
+            '1' => 'every hour',
+            '2' => '2 hours',
+            '3' => '3 hours',
+            '4' => '4 hours',
+            '6' => '6 hours',
+            '24' => '1 '._d('day',452),
+            '48' => '2 '._d('days',337),
+        );
+
     $payment_data = get_all_payment_data($post_id);
     ?>
     <?php if(current_user_can('level_10')) { ?>
@@ -2943,7 +2954,7 @@ function child_ad_needs_payment_html($post_id="") {
                                         <div class="first"><span class="text l"></span> <span class="icon icon-arrow-up hide"></span><span class="icon icon-arrow-down"></span></div>
                                         <div class="options rad5 shadow hide">
                                             <?php
-                                            foreach ($duration_list as $key => $value) {
+                                            foreach ($duration_push_list as $key => $value) {
                                                 echo '<div data-value="'.$key.'" class="option">'.$value.'</div>';
                                             }
                                             ?>
@@ -2968,7 +2979,27 @@ function child_ad_needs_payment_html($post_id="") {
                         <?php } else {
                             if(get_post_meta($post_id, 'push_ad_recurring', true) || (get_post_meta($post_id, 'push_ad', true) && !get_post_meta($post_id, 'push_ad_expiration', true))) { } else {
                         ?>
-                            <div class="clear20"></div>
+                            <div class="admin-upgrade-options">
+                                <div class="clear5"></div>
+                                <form action="" method="post" class="expires-in l">
+                                    <input type="hidden" name="upgrade_id" value="4" />
+                                    <div class="l">Renew itself in:</div>
+                                    <div class="fake-select fake-select-time push_ads_recurring rad3 no-selection l">
+                                        <div class="first"><span class="text l"></span> <span class="icon icon-arrow-up hide"></span><span class="icon icon-arrow-down"></span></div>
+                                        <div class="options rad5 shadow hide">
+                                            <?php
+                                            foreach ($duration_push_list as $key => $value) {
+
+                                                echo '<div data-value="'.$key.'" class="option">'.$value.'</div>';
+                                            }
+                                            ?>
+                                        </div> <!-- options -->
+                                        <input type="hidden" name="upgrade_duration" value="0" />
+                                    </div> <!-- fake-selector -->
+                                </form> <!-- expires-in -->
+                            </div>
+
+
                             <div class="payment-buttons col-100 text-center">
                                 <?php $pre_text = get_post_meta($post_id, 'push_ad', true) ? _d('Extend this ad for',471) : _d('Pay',472); ?>
                                 <div class="payment-buttons-text"><span class="icon icon-lock"></span>&nbsp;&nbsp; <?=$pre_text?> <?=get_option('payment_currency_symbol_before')?><?=$payment_data['push']['first']['price']?><?=get_option('payment_currency_symbol_after')?> <?=_d('with',470)?></div>
@@ -3008,7 +3039,7 @@ function generate_mycred_balance_buttons() {
     } ?>
     <div class="mycred-balance">
         <h4>My Balance</h4>
-        <p>Credits Avaliable</p>
+        <p>Credits Available</p>
         <p><?= $balance ?></p>
         <button onclick="window.location.href='mycred-checkout';">Buy Credits</button>
     </div>
