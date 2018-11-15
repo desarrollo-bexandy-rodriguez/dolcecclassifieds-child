@@ -1098,7 +1098,7 @@ if($_GET['processor'] == "paypal") {
 
 // MyCred
 if($_GET['processor'] == "mycred") {
-
+	
 	$product_id = $_POST['vars']['item_nr'];
 	$post_id = $_POST['vars']['post_id'];
 	if(in_array($product_id, array("5", "6"))) {
@@ -1158,6 +1158,7 @@ if($_GET['processor'] == "mycred") {
 			}
 			$item_name = _d('Upgrade',517)." - "._d('Push to top',437);
 			$product_price = $payment_data['push']['first']['price'];
+			$duration_push_ad = $_POST['vars']['duration_push_ad'];
 			break;
 
 		case '5':
@@ -1256,12 +1257,13 @@ switch ($product_id) {
 	case '4': // Push to top
 		$payment_product_custom_meta_marker = "push_ad";
 		$payment_recurring = $payment_data['push']['first']['recurring'];
-		$payment_duration = $payment_data['push']['first']['duration'];
+		$payment_duration = $_POST['vars']['duration_push_ad'];
 		$payment_duration_type = $payment_data['push']['first']['durationtype'];
 		$payment_recurring_meta = "push_ad_recurring";
 		$payment_recurring_period_meta = "push_ad_recurring_period";
 		$payment_expiration_meta = "push_ad_expiration";
 		$email_message = _d("Your ad upgrade for \"Push ad\" is now active.",844);
+		$duration_push_ad = $_POST['vars']['duration_push_ad'];
 		break;
 
 	case '5': // Registration fee PERSONAL
@@ -1315,7 +1317,7 @@ if(in_array($product_id, array("5", "6"))) {
 }
 if($payment_duration) { // if the upgrade needs to expire
 	global $payment_duration_types;
-	$time_period = str_replace(array("D", "W", "M", "Y"), array("days", "weeks", "months", "years"), $payment_duration.' '.$payment_duration_types[$payment_duration_type]['2']);
+	$time_period = str_replace(array("D", "W", "M", "Y", "H", "C"), array("days", "weeks", "months", "years", "hours", "minutes"), $payment_duration.' '.$payment_duration_types[$payment_duration_type]['2']);
 
 	$expires_in = strtotime("+$time_period");
 	// if there is leftover expiration time in the post then we add it to the current expiration time

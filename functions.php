@@ -1,8 +1,16 @@
 <?php
 function dolceclassifieds_scripts_styles_child_theme() {
-		global $wp_styles;
-			wp_enqueue_style( 'dolceclassifieds-parent', get_template_directory_uri() . '/style.css');
+	global $wp_styles;
+    $parent_style = 'css'; 
+    wp_enqueue_style($parent_style, get_template_directory_uri().'/style.php');
+    wp_enqueue_style( 'child-style',
+        get_stylesheet_directory_uri() . '/style.css',
+        array( $parent_style ),
+        wp_get_theme()->get('Version')
+    );
 }
+add_action( 'wp_enqueue_scripts', 'dolceclassifieds_scripts_styles_child_theme' );
+
 //add_action( 'wp_enqueue_scripts', 'dolceclassifieds_scripts_styles_child_theme' );
 function my_enqueue_assets() {
 	global $wp_query;
@@ -80,6 +88,17 @@ function my_ajax_filter() {
 
 update_option('maximum_videos_to_upload', '2');
 update_option('max_video_size', '10');
+
+function override_parent_global_variables()
+{
+    global $payment_duration_types, $taxonomy_ad_url;
+    $payment_duration_types = array(
+            '6' => array('Minutes', 'Minute', 'C', 'minute'),
+            '5' => array('Hours', 'Hour', 'H', 'hour')
+        )+$payment_duration_types ;
+    $taxonomy_ad_url = $taxonomy_ad_url;
+}
+add_action( 'after_setup_theme', 'override_parent_global_variables' ); 
 
 function child_dequeue_script() {
     wp_dequeue_script( 'dolcejs' );
@@ -2358,35 +2377,22 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
         $payment_data = get_all_payment_data($post_id);
     }
 
-    $payment_currency = get_option('payment_currency');
-    $payment_stripe_rememberme = get_option('payment_stripe_rememberme');
-    $payment_stripe_sandbox = get_option('payment_stripe_sandbox');
-    if(get_option('payment_stripe_sandbox') == "1") {
-        // sandbox activated
-        $stripe_secret_key = get_option('payment_stripe_test_secret_key');
-        $stripe_publishable_key = get_option('payment_stripe_test_publishable_key');
-    } else {
-        // sandbox disabled
-        $stripe_secret_key = get_option('payment_stripe_live_secret_key');
-        $stripe_publishable_key = get_option('payment_stripe_live_publishable_key');
-    }
-
     switch ($product_id) {
         case '1': // posting fee
             $item_name = _d('Ad posting fee',435);
-            $amount = $payment_data['paid_ads']['first']['price'] * 100;
+            $amount = $payment_data['paid_ads']['first']['price'];
             $payment_recurring = $payment_data['paid_ads']['first']['recurring'];
             break;
         
         case '2': // Always on top
             $item_name = _d('Upgrade',517)." - "._d('Always on top',240);
-            $amount = $payment_data['always_on_top']['first']['price'] * 100;
+            $amount = $payment_data['always_on_top']['first']['price'];
             $payment_recurring = $payment_data['always_on_top']['first']['recurring'];
             break;
         
         case '3': // Highlighted ads
             $item_name = _d('Upgrade',517)." - "._d('Highlighted ads',244);
-            $amount = $payment_data['highlighted_ad']['first']['price'] * 100;
+            $amount = $payment_data['highlighted_ad']['first']['price'];
             $payment_recurring = $payment_data['highlighted_ad']['first']['recurring'];
             break;
         
@@ -2398,13 +2404,13 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
 
         case '5': // Registration fee PERSONAL
             $item_name = _d('Registration fee',978);
-            $amount = $payment_data['user_reg']['personal']['first']['price'] * 100;
+            $amount = $payment_data['user_reg']['personal']['first']['price'];
             $payment_recurring = $payment_data['user_reg']['personal']['first']['recurring'];
             break;
 
         case '6': // Registration fee BUSINESS
             $item_name = _d('Business registration fee',979);
-            $amount = $payment_data['user_reg']['business']['first']['price'] * 100;
+            $amount = $payment_data['user_reg']['business']['first']['price'];
             $payment_recurring = $payment_data['user_reg']['business']['first']['recurring'];
             break;
 
@@ -2421,7 +2427,8 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
             // Open Checkout with further options
             var vars = {
                         'item_nr': <?=$product_id?>,
-                        'post_id': <?=$post_id?>
+                        'post_id': <?=$post_id?>,
+                        'duration_push_ad': $('.push_ads_recurring input[name="upgrade_duration"]').val()
                     };
                 $.ajax({
                     type: "POST",
@@ -2550,13 +2557,16 @@ function child_ad_needs_payment_html($post_id="") {
 
     $duration_push_list = array(
             '0' => _d('Never',451),
-            '1' => 'every hour',
-            '2' => '2 hours',
-            '3' => '3 hours',
-            '4' => '4 hours',
-            '6' => '6 hours',
-            '24' => '1 '._d('day',452),
-            '48' => '2 '._d('days',337),
+            '5' => '5 minutes',
+            '15' => '15 minutes',
+            '30' => '30 minutes',
+            '60' => 'every hour',
+            '120' => '2 hours',
+            '180' => '3 hours',
+            '240' => '4 hours',
+            '360' => '6 hours',
+            '1440' => '1 '._d('day',452),
+            '2880' => '2 '._d('days',337),
         );
 
     $payment_data = get_all_payment_data($post_id);
@@ -3059,7 +3069,7 @@ function check_expired_push_ads() {
 
     // expired "Push to top price" payment START
     $args = array(
-            'post_type' => $taxonomy_ad_url,
+            'post_type' => 'item',
             'post_status' => array('publish', 'draft', 'private'),
             'posts_per_page' => '-1',
             'meta_query' => array(
@@ -3102,7 +3112,7 @@ function check_expired_push_ads() {
 
 // revisar ads push cada 5 minutos
 if(get_option('check_expired_recurring_push_ads') < time()) {
-    update_option('check_expired_recurring_push_ads', strtotime('+5 minutes'));
+    update_option('check_expired_recurring_push_ads', strtotime('+1 minutes'));
     check_expired_recurring_push_ads();
 }
 
@@ -3111,7 +3121,7 @@ function check_expired_recurring_push_ads() {
 
     // expired "Push to top price" payment START
     $args = array(
-            'post_type' => $taxonomy_ad_url,
+            'post_type' => 'item',
             'post_status' => array('publish', 'draft', 'private'),
             'posts_per_page' => '-1',
             'meta_query' => array(
@@ -3150,7 +3160,7 @@ function check_expired_recurring_push_ads() {
                 delete_post_meta(get_the_ID(), 'push_ad_expiration');
                 delete_post_meta(get_the_ID(), 'push_ad_recurring');
             } else {
-                update_post_meta(get_the_ID(), 'push_ad_recurring', strtotime('+5 minutes') );
+                update_post_meta(get_the_ID(), 'push_ad_expiration', strtotime('+5 minutes') );
             }
             
             
@@ -3163,8 +3173,8 @@ function check_expired_recurring_push_ads() {
 function update_recurring_push_ad($post_id = null) {
     $ad_to_process = get_post($post_id);
     $author_id = $ad_to_process->post_author;
-    $payment_data = get_all_payment_data($post_id);
-    $item_name = _d('Upgrade',517)." - "._d('Push to top',437);
+    $payment_data = child_get_all_payment_data($post_id);
+    $item_name = "Upgrade - Push to top";
     $product_price = $payment_data['push']['first']['price'];
     // RETRIEVE client from STRIPE
     $mycred = mycred();
@@ -3185,3 +3195,23 @@ function update_recurring_push_ad($post_id = null) {
     }
     return true;
 } // function update_recurring_push_ad()
+
+function child_get_all_payment_data($post_id="") {
+    $all_data = array(
+            'user_reg' => get_option('payment_user_reg_data'),
+            'paid_ads' => get_option('payment_paid_ads_data'),
+            'always_on_top' => get_option('payment_always_on_top_data'),
+            'highlighted_ad' => get_option('payment_highlighted_ad_data'),
+            'push' => get_option('payment_push_data')
+        );
+
+    if($post_id) {
+        $post_data = get_post($post_id);
+        $user_type = get_user_meta($post_data->post_author, 'user_type', true) ? get_user_meta($post_data->post_author, 'user_type', true) : "personal";
+
+        foreach ($all_data as $payment_name => $user_types) {
+            $all_data[$payment_name] = $all_data[$payment_name][$user_type];
+        }
+    }
+    return $all_data;
+}
