@@ -168,6 +168,11 @@ function child_ad_needs_payment_html($post_id="") {
         }
     }
 
+    $show_cancel_mycred_subscription_button = false;
+    if($post_data && get_post_meta($post_id, 'push_ad_recurring', true)) {
+        $show_cancel_mycred_subscription_button = true;
+    }
+
     $duration_list = array(
             '0' => _d('Never',451),
             '1' => '1 '._d('day',452),
@@ -184,17 +189,17 @@ function child_ad_needs_payment_html($post_id="") {
         );
 
     $duration_push_list = array(
-            '0' => _d('Never',451),
-            '5' => '5 minutes',
-            '15' => '15 minutes',
-            '30' => '30 minutes',
-            '60' => 'every hour',
-            '120' => '2 hours',
-            '180' => '3 hours',
-            '240' => '4 hours',
-            '360' => '6 hours',
-            '1440' => '1 '._d('day',452),
-            '2880' => '2 '._d('days',337),
+            '0' => 'Just One Time',
+            '5' => 'Every 5 minutes',
+            '15' => 'Every 15 minutes',
+            '30' => 'Every 30 minutes',
+            '60' => 'Every hour',
+            '120' => 'Every 2 hours',
+            '180' => 'Every 3 hours',
+            '240' => 'Every 4 hours',
+            '360' => 'Every 6 hours',
+            '1440' => 'Every 1 '._d('day',452),
+            '2880' => 'Every 2 '._d('days',337),
         );
 
     $payment_data = get_all_payment_data($post_id);
@@ -655,6 +660,11 @@ function child_ad_needs_payment_html($post_id="") {
                                 generate_stripe_cancel_subscription_button('4', $post_id);
                             }
                         }
+
+                        if($show_cancel_mycred_subscription_button) {
+                            child_generate_mycred_cancel_subscription_button('4', $post_id);
+                        }
+
                         ?>
                         <div class="clear"></div>
                     </div> <!-- product -->
@@ -754,60 +764,74 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
         $('#pay_button_<?=$product_id?>').on('click', function(e) {
             e.preventDefault();
             // Open Checkout with further options
-            var vars = {
-                        'item_nr': <?=$product_id?>,
-                        'post_id': <?=$post_id?>,
-                        'duration_push_ad': $('.push_ads_recurring input[name="upgrade_duration"]').val()
-                    };
-                $.ajax({
-                    type: "POST",
-                    url: wpvars.wpchildthemeurl+'/IPN.php?processor=mycred',
-                    data: { vars: vars },
-                    cache: false,
-                    timeout: 30000, // in milliseconds
-                    success: function(raw_paydata) {
-                        var is_err = false;
-                        var is_json = true;
-                        try {
-                            var paydata = JSON.parse(raw_paydata);
-                        } catch(err) {
-                            is_json = false;
-                        }
-                        if(is_json && paydata != null) {
-                            if(paydata.status == 'ok') {
-                                $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').html(paydata.msg);
-                                $('#message_for_<?=$product_id?> .stripe-payment-processing-message .wait').html('Refreshing the page in 2 seconds...');
-                                $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon').hide();
-                                $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon-for-ok').fadeIn('fast');
-                                setTimeout(function() {
-                                    <?php if(in_array($product_id, array("5", "6"))) { ?>
-                                        location.reload();
-                                    <?php } else { ?>
-                                        window.location = '<?=get_post_permalink($post_id)?>';
-                                    <?php } ?>
-                                }, 2000);
-                            } else {
-                                is_err = true;
-                            }//if error
-                        }
+            if(!$('#overlay_for_<?=$product_id?>').length) {
+				$('body').append('<div class="overlay hide" id="overlay_for_<?=$product_id?>"></div>');
+			}
 
-                        if(is_err || !is_json || !raw_paydata) {
-                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').text('<?=_d('Payment error!',631)?>');
-                            if(is_json) {
-                                if(paydata.msg) {
-                                    $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').append('<br />'+paydata.msg);
-                                }
-                            }
-                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message').find('.icon, .wait').hide();
-                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon-for-err').fadeIn('fast');
-                        }
-                    },
-                    error: function(request, status, err) {
+            if(!$('#message_for_<?=$product_id?>').length) {
+				$('body').append('<div class="stripe-payment-processing-message-container hide" id="message_for_<?=$product_id?>"><div class="close r"><span class="icon icon-cancel"></span> <?=addslashes(_d('close',195))?></div><div class="clear5"></div><div class="stripe-payment-processing-message rad5 shadow text-center"><span class="text"><?=addslashes(_d('Processing payment!',706))?></span><div class="clear30"></div><img class="icon loader" src="<?=get_template_directory_uri()?>/plugins/private-messages/loader.svg" alt="" /><span class="icon icon-for-err icon-cancel hide no-selection"></span><span class="icon icon-for-ok icon-checkmark hide no-selection"></span><div class="wait"><?=addslashes(_d('please wait...',707))?></div></div></div>');
+			}
+
+            $('#message_for_<?=$product_id?>').show();
+				var top = (($(window).outerHeight() - $('#message_for_<?=$product_id?>').outerHeight()) / 2);
+				var left = (($(window).outerWidth() - $('#message_for_<?=$product_id?>').outerWidth()) / 2);
+				$('#message_for_<?=$product_id?>').css({'top': top, 'left': left});
+            
+            var vars = {
+                'item_nr': <?=$product_id?>,
+                'post_id': <?=$post_id?>,
+                'duration_push_ad': $('.push_ads_recurring input[name="upgrade_duration"]').val()
+            };
+            
+            $.ajax({
+                type: "POST",
+                url: wpvars.wpchildthemeurl+'/IPN.php?processor=mycred',
+                data: { vars: vars },
+                cache: false,
+                timeout: 30000, // in milliseconds
+                success: function(raw_paydata) {
+                    var is_err = false;
+                    var is_json = true;
+                    try {
+                        var paydata = JSON.parse(raw_paydata);
+                    } catch(err) {
+                        is_json = false;
+                    }
+                    if(is_json && paydata != null) {
+                        if(paydata.status == 'ok') {
+                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').html(paydata.msg);
+                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .wait').html('Refreshing the page in 2 seconds...');
+                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon').hide();
+                            $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon-for-ok').fadeIn('fast');
+                            setTimeout(function() {
+                                <?php if(in_array($product_id, array("5", "6"))) { ?>
+                                    location.reload();
+                                <?php } else { ?>
+                                    window.location = '<?=get_post_permalink($post_id)?>';
+                                <?php } ?>
+                            }, 2000);
+                        } else {
+                            is_err = true;
+                        }//if error
+                    }
+
+                    if(is_err || !is_json || !raw_paydata) {
                         $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').text('<?=_d('Payment error!',631)?>');
+                        if(is_json) {
+                            if(paydata.msg) {
+                                $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').append('<br />'+paydata.msg);
+                            }
+                        }
                         $('#message_for_<?=$product_id?> .stripe-payment-processing-message').find('.icon, .wait').hide();
                         $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon-for-err').fadeIn('fast');
                     }
-                });
+                },
+                error: function(request, status, err) {
+                    $('#message_for_<?=$product_id?> .stripe-payment-processing-message .text').text('<?=_d('Payment error!',631)?>');
+                    $('#message_for_<?=$product_id?> .stripe-payment-processing-message').find('.icon, .wait').hide();
+                    $('#message_for_<?=$product_id?> .stripe-payment-processing-message .icon-for-err').fadeIn('fast');
+                }
+            });
         });
 
         // Close Checkout on page navigation
@@ -850,23 +874,7 @@ function child_generate_payment_option_form($payment_name, $form_payment_data=""
 			return 'Option not enabled to MyCred Gateway Payment';
 		}
 	}
-	// if(!$form_payment_data[$user_type]) $form_payment_data[$user_type] = array(array());
-	// [payment_name]
-	// 	[personal] // user_type
-	// 		[1] // plan
-	// 			[price] => [100]
-	// 			[duration] => [10]
-	// 		[2] // plan
-	// 			[price] => [100]
-	// 			[duration] => [10]
-	// 	[business] // user_type
-	// 		[1] // plan
-	// 			[price] => [100]
-	// 			[duration] => [10]
-	// 		[2] // plan
-	// 			[price] => [100]
-	// 			[duration] => [10]
-	// TO DO foreach (array("first", "second") as $plan_id) {
+
 	foreach (array("first") as $plan_id) {
 		if($plan_id == "second" && !$payment_data[$user_type][$plan_id]['price'] && !$payment_data[$user_type][$plan_id]['duration']) {
 			$extra_class_div = " hide";
@@ -939,18 +947,6 @@ function child_generate_payment_option_form($payment_name, $form_payment_data=""
 				</div> <!-- toggle -->
 			</div> <!-- form-input --> <div class="clear"></div>
 
-			<?php /* TO DO if($plan_id == "first") { ?>
-			<div class="add_extra_payment_plan_wrapper text-center">
-				<div class="and-then-wrapper"><div class="and-then rad3"><?=_d('after this continue with',837)?>:</div></div>
-				<div class="clear"></div>
-				<div class="add_extra_payment_plan"<?=$extra_style_button?>><span class="icon icon-plus"></span></div>
-			</div> <!-- add_extra_payment_plan_wrapper -->
-			<?php } ?>
-			<?php if($plan_id == "second") { ?>
-			<div class="remove_extra_payment_plan_wrapper text-center">
-				<div class="remove_extra_payment_plan"><span class="icon icon-cancel"></span></div>
-			</div> <!-- remove_extra_payment_plan_wrapper -->
-			<?php } */ ?>
 		</div> <!-- <?=$plan_id?>-payment-plan -->
 	<?php
 	} // foreach ($form_payment_data[$user_type] as $key => $payment_data) {
@@ -971,5 +967,111 @@ function generate_mycred_balance_buttons() {
         <button onclick="window.location.href='mycred-checkout';">Buy Credits</button>
     </div>
 <?php // function generate_mycred_balance_buttons()
+}
+
+function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('.cancel-subscription-button-stripe').on('click', function(event) {
+                var button = $(this);
+                var item_id = $(this).data('item-id');
+                if(button.hasClass('cancel-subscription-button-noclick')) {
+                    return false;
+                } else {
+                    $(this).addClass('cancel-subscription-button-noclick cancel-subscription-button-active');
+                }
+
+                button.find('.icon').hide();
+                button.find('.text').text(button.data('saving')).parent().find('.icon-for-saving').show();
+
+                var form_data = [];
+                form_data.push({name: 'item_id', value: item_id});
+                form_data.push({name: 'post_id', value: '<?=$post_id?>'});
+                $.ajax({
+                    type: "POST",
+                    url: wpvars.wpchildthemeurl+'/ajax/child-save-settings.php',
+                    data: { action: 'cancel-mycred-subscription', form_data: form_data },
+                    cache: false,
+                    timeout: 30000, // in milliseconds
+                    success: function(raw_data) {
+                        var is_err = false;
+                        var is_json = true;
+                        try {
+                            var data = JSON.parse(raw_data);
+                        } catch(err) {
+                            is_json = false;
+                        }
+                        if(is_json && data != null) {
+                            if(data.status == 'ok') {
+                                <?php if(in_array($item_id, array("5", "6"))) { ?>
+                                    location.reload();
+                                <?php } else { ?>
+                                    if(data.msg) {
+                                        button.parents('.product').find('.purchased').fadeOut('fast', function() {
+                                            $(this).html(data.msg).fadeIn('200');
+                                        });
+                                    }
+                                <?php } ?>
+
+                                button.find('.icon').hide();
+                                button.find('.text').text(button.data('saved')).parent().find('.icon-for-saved').show();
+                                <?php if(!in_array($item_id, array("5", "6"))) { ?>
+                                setTimeout(function() {
+                                    button.parent().fadeOut('fast');
+                                }, 3000);
+                                <?php } ?>
+                                setTimeout(function() {
+                                    <?php if(in_array($product_id, array("5", "6"))) { ?>
+                                        location.reload();
+                                    <?php } else { ?>
+                                        window.location = '<?=get_post_permalink($post_id)?>';
+                                    <?php } ?>
+                                }, 4000);
+                            } else {
+                                is_err = true;
+                            }//if error
+                        }
+
+                        if(is_err || !is_json || !raw_data) {
+                            button.find('.icon').hide();
+                            button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
+                            setTimeout(function() {
+                                button.find('.icon').hide();
+                                button.removeClass('cancel-subscription-button-noclick').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
+                            }, 3000);
+                        }
+                    },
+                    error: function(request, status, err) {
+                        button.find('.icon').hide();
+                        button.find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
+                        setTimeout(function() {
+                            button.find('.icon').hide();
+                            button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="col-100 text-center">
+        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?=_d('Canceling',709)?>" data-saved="<?=_d('Subscription canceled',601)?>" data-default="<?=_d('Cancel subscription',710)?>" data-error="<?=_d('Error',94)?>">
+            <span class="text"><?=_d('Cancel subscription',710)?></span>
+            <span class="icon icon-for-default icon-arrow-right"></span>
+            <svg version="1.1" class="icon icon-for-saving loader r hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
+            <span class="icon icon-for-saved icon-checkmark hide"></span>
+            <span class="icon icon-for-error icon-cancel hide"></span>
+        </div> <!-- cancel-subscription-button -->
+        <?php generate_mycred_balance_buttons(); ?>
+        <div class="clear5"></div>
+        <?php
+        if(in_array($item_id, array("5", "6"))) {
+            $button_info_text = _d('Canceling the subscription does not remove the subscription right away. It will be removed at the expiration date.',995);
+        } else {
+            $button_info_text = _d('Canceling the subscription does not remove the upgrade. It will be removed at expiration date.',711);
+        }
+        ?>
+        <div class="cancel-subscription-button-description"><?=$button_info_text?></div>
+    </div>
+    <?php
 }
 
