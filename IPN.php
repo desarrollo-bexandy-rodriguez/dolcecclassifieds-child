@@ -1179,7 +1179,7 @@ if($_GET['processor'] == "mycred") {
 	}
 
 
-	// RETRIEVE client from STRIPE
+	// PROCESS Payment with MyCred
 	$mycred = mycred();
 	// Make sure user is not excluded
 	if ( ! $mycred->exclude_user( $author_id ) ) {
@@ -1190,7 +1190,7 @@ if($_GET['processor'] == "mycred") {
 			die(json_encode(array('status' => 'err', 'msg' => 'You dont have enought credits')));
 		// Adjust balance with a log entry
 		$mycred->add_creds(
-			'reference',
+			'Push Ad Payment',
 			$author_id,
 			$product_price * -1,
 			$item_name
@@ -1257,13 +1257,14 @@ switch ($product_id) {
 	case '4': // Push to top
 		$payment_product_custom_meta_marker = "push_ad";
 		$payment_recurring = $payment_data['push']['first']['recurring'];
-		$payment_duration = $_POST['vars']['duration_push_ad'];
+		$payment_duration = $payment_data['push']['first']['duration'];
 		$payment_duration_type = $payment_data['push']['first']['durationtype'];
 		$payment_recurring_meta = "push_ad_recurring";
 		$payment_recurring_period_meta = "push_ad_recurring_period";
 		$payment_expiration_meta = "push_ad_expiration";
 		$email_message = _d("Your ad upgrade for \"Push ad\" is now active.",844);
 		$duration_push_ad = $_POST['vars']['duration_push_ad'];
+		$mycred_subscription = $mycred_recurring && $duration_push_ad;
 		break;
 
 	case '5': // Registration fee PERSONAL
@@ -1292,32 +1293,11 @@ switch ($product_id) {
 }
 
 // Apply the upgrade from the payment
-if(in_array($product_id, array("5", "6"))) {
-	update_user_meta($post_id, $payment_product_custom_meta_marker, '1'); // add marker to know that the upgrade was paid
-	if($stripe_plan) {
-		$current_subscription_plans = get_user_meta($post_id, 'stripe_subscription_plan', true);
-		if(count($current_subscription_plans) == "0") {
-			update_user_meta($post_id, 'stripe_subscription_plan', array($product_id => $stripe_plan));
-		} else {
-			$current_subscription_plans[$product_id] = $stripe_plan;
-			update_user_meta($post_id, 'stripe_subscription_plan', $current_subscription_plans);
-		}
-	}
-} else {
-	update_post_meta($post_id, $payment_product_custom_meta_marker, '1'); // add marker to know that the upgrade was paid
-	if($stripe_plan) {
-		$current_subscription_plans = get_post_meta($post_id, 'stripe_subscription_plan', true);
-		if(count($current_subscription_plans) == "0") {
-			update_post_meta($post_id, 'stripe_subscription_plan', array($product_id => $stripe_plan));
-		} else {
-			$current_subscription_plans[$product_id] = $stripe_plan;
-			update_post_meta($post_id, 'stripe_subscription_plan', $current_subscription_plans);
-		}
-	}
-}
-if($payment_duration) { // if the upgrade needs to expire
+update_post_meta($post_id, $payment_product_custom_meta_marker, '1'); // add marker to know that the upgrade was paid
+
+if($duration_push_ad) { // if the upgrade needs to expire
 	global $payment_duration_types;
-	$time_period = str_replace(array("D", "W", "M", "Y", "H", "C"), array("days", "weeks", "months", "years", "hours", "minutes"), $payment_duration.' '.$payment_duration_types[$payment_duration_type]['2']);
+	$time_period = str_replace(array("D", "W", "M", "Y", "H", "C"), array("days", "weeks", "months", "years", "hours", "minutes"), $duration_push_ad.' '.$payment_duration_types[$payment_duration_type]['2']);
 
 	$expires_in = strtotime("+$time_period");
 	// if there is leftover expiration time in the post then we add it to the current expiration time
@@ -1325,39 +1305,30 @@ if($payment_duration) { // if the upgrade needs to expire
 	if($available_expiration_time > current_time('timestamp')) {
 		$expires_in = $expires_in + ($available_expiration_time - current_time('timestamp'));
 	}
-	if($stripe_subscription_renewal) { // if stripe was used then we use the renewal unix time from stripe
-		$expires_in = $stripe_subscription_renewal;
-	}
-	if(in_array($product_id, array("5", "6"))) {
-		update_user_meta($post_id, $payment_expiration_meta, $expires_in);
-	} else {
-		update_post_meta($post_id, $payment_expiration_meta, $expires_in);
-	}
 
-	if($payment_recurring == "1" ) { // if recurring payment
-		if(in_array($product_id, array("5", "6"))) {
-			update_user_meta($post_id, $payment_recurring_meta, '1'); // add marker to know that this payment is a recurring payment
-			update_user_meta($post_id, $payment_recurring_period_meta, $time_period); // save the current payment plan's time duration so we can use it for future payments
-		} else {
-			update_post_meta($post_id, $payment_recurring_meta, '1'); // add marker to know that this payment is a recurring payment
-			update_post_meta($post_id, $payment_recurring_period_meta, $time_period); // save the current payment plan's time duration so we can use it for future payments
-		}
+	update_post_meta($post_id, $payment_expiration_meta, $expires_in);
+
+	if( $mycred_subscription ) { // if recurring payment
+		update_post_meta($post_id, $payment_recurring_meta, '1'); // add marker to know that this payment is a recurring payment
+		update_post_meta($post_id, $payment_recurring_period_meta, $time_period); // save the current payment plan's time duration so we can use it for future payments
 	}
 } // if($payment_duration) { // if payment should expire
 
-if($stripe_subscription_id) {
-	if(in_array($product_id, array("5", "6"))) {
-		$current_subscription_ids = get_user_meta($post_id, 'stripe_subscription_id', true);
-		$current_subscription_ids[$product_id] = $stripe_subscription_id;
-		update_user_meta($post_id, 'stripe_subscription_id', $current_subscription_ids);
-	} else {
-		$current_subscription_ids = get_post_meta($post_id, 'stripe_subscription_id', true);
-		$current_subscription_ids[$product_id] = $stripe_subscription_id;
-		update_post_meta($post_id, 'stripe_subscription_id', $current_subscription_ids);
+// renew post date time
+if ($product_id == '4') {
+	$expires_in = strtotime("+5 minutes");
+	// if there is leftover expiration time in the post then we add it to the current expiration time
+	$available_expiration_time = get_post_meta($post_id, $payment_expiration_meta, true);
+	if($available_expiration_time > current_time('timestamp')) {
+		$expires_in = $expires_in + ($available_expiration_time - current_time('timestamp'));
 	}
+
+	update_post_meta($post_id, $payment_expiration_meta, $expires_in);
+
+	wp_update_post(array('ID' => $post_id, 'post_date' => date("Y-m-d H:i:s", current_time('timestamp'))));
+	update_post_meta($post_id, 'last_pushed_date', date("Y-m-d H:i:s", current_time('timestamp')));
+	update_post_meta($post_id, 'needs_payment', '1');
 }
-
-
 
 // save the payment in the site
 $payment_args = array(

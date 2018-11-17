@@ -885,6 +885,90 @@ function child_validate_settings_form($action, $form_data='') {
             die(json_encode(array('status' => 'ok', 'msg' => $msg)));
             break; // cancel-stripe-subscription
 
+        case 'cancel-mycred-subscription':
+            foreach ($form as $key => $value) {
+                switch ($key) {
+                    case 'item_id':
+                        $item_id = (int)$value;
+                        if(!$item_id)
+                            die(json_encode(array('status' => 'err', 'err_msg' => _d('We need the item ID!',438))));
+                        break;
+
+                    case 'post_id':
+                        $post_id = (int)$value;
+                        if(!$post_id) {
+                            if(in_array($item_id, array("5", "6"))) {
+                                die(json_encode(array('status' => 'err', 'err_msg' => _d('We need the user ID!',996))));
+                            } else {
+                                die(json_encode(array('status' => 'err', 'err_msg' => _d('We need the ad ID!',439))));
+                            }
+                        }
+                        break;
+                } // switch between fields
+            } // foreach $form
+
+            // does the ad/user exist?
+            if(in_array($item_id, array("5", "6"))) {
+                $post_data = get_user_by('ID', $post_id);
+                if(!$post_data) die(json_encode(array('status' => 'err', 'err_msg' => _d('There is no user with this ID!',997))));
+            } else {
+                $post_data = get_post($post_id);
+                if(!$post_data) die(json_encode(array('status' => 'err', 'err_msg' => _d('There is no ad with this ID!',440))));
+            }
+
+            // if the current user is not the ad author or an admin
+            $user_id = in_array($item_id, array("5", "6")) ? $post_data->ID : $post_data->post_author;
+            if($current_user->ID != $user_id && !current_user_can('level_10')) {
+                die(json_encode(array('status' => 'err', 'err_msg' => _d('You are not allowed to cancel this subscription!',441))));
+            }
+
+
+            $mycred_subscription_id = get_post_meta($post_id, 'push_ad_recurring', true);
+            if(!$mycred_subscription_id) {
+                die(json_encode(array('status' => 'err', 'err_msg' => _d('There is no subscription id for this item id!',443))));
+            }
+
+            payment_canceled($item_id, $post_id, false);
+
+            if(in_array($item_id, array("5", "6"))) {
+                die(json_encode(array('status' => 'ok', 'msg' => _d('Subscription canceled',601))));
+            }
+
+            switch ($item_id) {
+                case '1': // Ad posting fee
+                    $expiration_meta = "ad_posting_fee_expiration";
+                    break;
+
+                case '2': // Always on top
+                    $expiration_meta = "always_on_top_expiration";
+                    break;
+
+                case '3': // Highlighted ad
+                    $expiration_meta = "highlighted_ad_expiration";
+                    break;
+
+                case '4': // Push ad
+                    $expiration_meta = "push_ad_expiration";
+                    break;
+            }
+
+            $msg = _d('Subscription canceled',601);
+            if(get_post_meta($post_id, $expiration_meta, true)) {
+                $expiration_seconds = get_post_meta($post_id, $expiration_meta, true) - current_time('timestamp');
+                if($expiration_seconds > 0) {
+                    // still active
+                    $msg .= ' <span>-</span> '._d('expires in',462).' '.secondsToTime($expiration_seconds);
+                }
+            }
+
+            delete_post_meta($post_id, 'push_ad');
+            delete_post_meta($post_id, 'push_ad_expiration');
+            delete_post_meta($post_id, 'push_ad_recurring');
+            delete_post_meta($post_id, 'push_ad_recurring_period');
+
+            die(json_encode(array('status' => 'ok', 'msg' => $msg)));
+            break; // cancel-mycred-subscription
+
         case 'edit-account':
             if(current_user_can('level_10') && $form['userid']) {
                 $userid = (int)$form['userid'];
