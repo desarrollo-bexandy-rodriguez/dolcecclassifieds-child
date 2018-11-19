@@ -448,11 +448,23 @@ div.child-whatsapp:before {
 /****************************** MyCred AutoRenova ******************************************/
 
 .ad-needs-payment-section .payment-buttons .pay-button-mycred {
-	line-height: 1em;
+	margin-top: -15px;
 }
 
 .mycred-balance {
 	float: right;
 	padding: 10px 5px;
 	text-align: right;
+}
+
+.ad-needs-payment-section .message-top h4 {
+	color: #22a4e6;
+    margin: 10px 50px;
+}
+
+.ad-needs-payment-section .payment-products .product > p {
+    color: #22a4e6;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bolder;
 }

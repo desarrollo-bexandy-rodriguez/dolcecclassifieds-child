@@ -295,7 +295,7 @@ function child_ad_needs_payment_html($post_id="") {
         <?php if(!$post_id || (get_post_status($post_id) == 'private' && get_post_meta($post_id, 'needs_payment', true))) { ?>
             <div style="font-size: 1.5em"><?=_d('Please pay the posting fee so we can show your ad in our website',458)?>.</div>
         <?php } else { ?>
-            <div style="font-size: 1.5em"><?=_d('Here you can purchase ad upgrades to get more views for your ad',459)?>.</div>
+            <div class="message-top" style="font-size: 1.5em"><h4><?= 'Here you can buy the self renews to facilitate that your ad is always updated, you will have more visibility and many more calls' ?>.</h4></div>
         <?php } ?>
         <div class="clear10"></div>
 
@@ -562,10 +562,8 @@ function child_ad_needs_payment_html($post_id="") {
 
                 <?php if($payment_data['push']['first']['price'] || current_user_can('level_10')) { ?>
                     <div class="product rad5">
-                        <?php if($payment_data['push']['first']['price']) { ?>
-                        <div class="price r"><?=dolce_format_price('push', $author_user_type)?></div>
-                        <?php } // if $payment_data['push']['first']['price'] ?>
-                        <h4><?=_d('Push ad',778)?>
+
+                        <h4><?= 'Self renew ad'?>
                         <?php
                         if(get_post_meta($post_id, 'push_ad', true) == "1") {
                             echo '<span class="purchased">'._d('purchased',460);
@@ -586,7 +584,7 @@ function child_ad_needs_payment_html($post_id="") {
                         }
                         ?>
                         </h4>
-                        <p><?=_d('Once a day we\'ll change the posting time of your ad and move it at the top of the newly added ads. That way your ad will not get pushed down in the listings by newer ads.',477)?></p>
+                        <p><?= 'For each renewal '.$payment_data['push']['first']['price'].' credits will be deducted'?></p>
                         <?php if(current_user_can('level_10')) { ?>
                             <div class="admin-upgrade-options">
                                 <div class="clear5"></div>
@@ -644,8 +642,6 @@ function child_ad_needs_payment_html($post_id="") {
 
 
                             <div class="payment-buttons col-100 text-center">
-                                <?php $pre_text = get_post_meta($post_id, 'push_ad', true) ? _d('Extend this ad for',471) : _d('Pay',472); ?>
-                                <div class="payment-buttons-text"><span class="icon icon-lock"></span>&nbsp;&nbsp; <?=$pre_text?> <?=get_option('payment_currency_symbol_before')?><?=$payment_data['push']['first']['price']?><?=get_option('payment_currency_symbol_after')?> <?=_d('with',470)?></div>
                                 <div class="generated-payment-buttons"><?php child_generate_payment_buttons('4', $post_id); ?></div>
                                 <?php generate_mycred_balance_buttons(); ?>
                             </div>
@@ -756,7 +752,7 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
     }
     ?>
 
-    <button id="pay_button_<?=$product_id?>" class="pay-button pay-button-mycred round-corners-button rad25"><span class="icon icon-money"></span> Credits</button>
+    <button id="pay_button_<?=$product_id?>" class="pay-button pay-button-mycred round-corners-button rad25">Activate self renewal</button>
 
     <script type="text/javascript">
     jQuery(document).ready(function($) {
@@ -844,8 +840,7 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
                 $(this).remove();
             });
         });
-
-time_period        $(window).on('resize', function(){
+        $(window).on('resize', function(){
             if($('#overlay_for_<?=$product_id?>').is(':visible')) {
                 $('#overlay_for_<?=$product_id?>').css({
                     width: $('body').outerWidth(),
@@ -957,14 +952,13 @@ function generate_mycred_balance_buttons() {
         $mycred=mycred();
         if (!$mycred->exclude_user(get_current_user_id()) ) {
             $balance = $mycred->get_users_balance( get_current_user_id() );
-            $balance = $mycred->format_creds($balance);
         }
     } ?>
     <div class="mycred-balance">
-        <h4>My Balance</h4>
+        <h4>My Credits</h4>
         <p>Credits Available</p>
-        <p><?= $balance ?></p>
-        <button onclick="window.location.href='mycred-checkout';">Buy Credits</button>
+        <p><?= $balance ?> credits</p>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='mycred-checkout';">Buy Credits</button>
     </div>
 <?php // function generate_mycred_balance_buttons()
 }

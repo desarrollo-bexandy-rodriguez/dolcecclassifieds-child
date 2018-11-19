@@ -466,7 +466,7 @@ function child_restore_default_language() {
         '456' => 'months',
         '457' => 'year',
         '458' => 'Please pay the posting fee so we can show your ad in our website',
-        '459' => 'Here you can purchase ad upgrades to get more views for your ad',
+        '459' => 'Here you can buy the self renews to facilitate that your ad is always updated, you will have more visibility and many more calls',
         '460' => 'purchased',
         '461' => 'renews in',
         '462' => 'expires in',
