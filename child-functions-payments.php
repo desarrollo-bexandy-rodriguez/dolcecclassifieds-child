@@ -845,7 +845,7 @@ function child_generate_mycred_payment_button($product_id, $post_id="") {
             });
         });
 
-        $(window).on('resize', function(){
+time_period        $(window).on('resize', function(){
             if($('#overlay_for_<?=$product_id?>').is(':visible')) {
                 $('#overlay_for_<?=$product_id?>').css({
                     width: $('body').outerWidth(),
