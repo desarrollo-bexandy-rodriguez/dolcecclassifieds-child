@@ -964,10 +964,14 @@ function generate_mycred_balance_buttons() {
         <h4>Credits Available</h4>
         <p><?= $balance ?> credits</p>
         <h4>Buy Credits</h4>
-        <form>
+        <form id="mycred-balance" oninput="result.value=parseInt(amount.value)*parseInt(tasa.value)">
             <label for="amount">Amount: </label>
-            <input type="text" name="amount" id="amount" width="25">
-            <output for="amount">€</output>
+            <input type="number" name="amount" id="amount" value="10" min="10"> Credits
+            <input type="hidden" name="tasa" id="tasa" value="0.5">
+            <p>
+                = <output name="result" id="result" for="amount tasa">0</output>
+            </p>
+            
         </form>
         <p>Pay with:
         <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<span class="icon icon-paypal"></span> Paypal[/mycred_buy]'); ?>
@@ -976,6 +980,24 @@ function generate_mycred_balance_buttons() {
         </p>
         
     </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('form#mycred-balance input#amount').on('change', function(event) {
+                var input = $(this);
+                var val = input.val();
+                var exchange = $('input#tasa').val();
+                
+                var result = val * exchange;
+                $('output#result').text(result+' €');
+
+                $('div.mycred-balance').find('a').each(function() {
+                   var url = $( this ).attr('href');
+                   var updurl = url.replace(/(amount=).*/,'amount=' + val );
+                   $( this ).attr('href', updurl);
+                });                
+        });
+    });
+    </script>
 <?php // function generate_mycred_balance_buttons()
 }
 
