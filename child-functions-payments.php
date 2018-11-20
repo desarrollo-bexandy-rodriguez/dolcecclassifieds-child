@@ -952,12 +952,27 @@ function generate_mycred_balance_buttons() {
         $mycred=mycred();
         if (!$mycred->exclude_user(get_current_user_id()) ) {
             $balance = $mycred->get_users_balance( get_current_user_id() );
+            $atts = array(
+                'gateway' => 'paypal-standard',
+                'amount'  => '100'
+            );
         }
     } ?>
     <div class="mycred-balance">
         <h4>My Credits</h4>
         <p>Credits Available</p>
         <p><?= $balance ?> credits</p>
+        <p>Buy Credits</p>
+        <form>
+            <label for="amount">Amount: </label>
+            <input type="text" name="amount" id="amount">
+            <output for="amount">€</output>
+        </form>
+        <p>Buy with:</p>
+        <?php echo do_shortcode('[mycred_buy_form gateway="paypal-standard" amount=""]<span class="icon icon-paypal"></span> Paypal[/mycred_buy_form]'); ?>
+        <br>
+        <button class="pay-button pay-button-credit-card round-corners-button rad25"><span class="icon icon-credit-card"></span> <?=_d('Credit Card',705)?></button>
+        <br>
         <button type="button" class="btn btn-secondary" onclick="window.location.href='mycred-checkout';">Buy Credits</button>
     </div>
 <?php // function generate_mycred_balance_buttons()
@@ -1048,8 +1063,8 @@ function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { 
         });
     </script>
     <div class="col-100 text-center">
-        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?=_d('Canceling',709)?>" data-saved="<?=_d('Subscription canceled',601)?>" data-default="<?=_d('Cancel subscription',710)?>" data-error="<?=_d('Error',94)?>">
-            <span class="text"><?=_d('Cancel subscription',710)?></span>
+        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?= 'Stopping' ?>" data-saved="<?= 'Self renew stoped' ?>" data-default="<?= 'Stop self renew' ?>" data-error="<?=_d('Error',94)?>">
+            <span class="text"><?= 'Stop / Modified self renew' ?></span>
             <span class="icon icon-for-default icon-arrow-right"></span>
             <svg version="1.1" class="icon icon-for-saving loader r hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
             <span class="icon icon-for-saved icon-checkmark hide"></span>
@@ -1059,9 +1074,9 @@ function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { 
         <div class="clear5"></div>
         <?php
         if(in_array($item_id, array("5", "6"))) {
-            $button_info_text = _d('Canceling the subscription does not remove the subscription right away. It will be removed at the expiration date.',995);
+            $button_info_text = 'When you stop self renew, you dont spent credits. You can activate when you need it in a pleasure time.';
         } else {
-            $button_info_text = _d('Canceling the subscription does not remove the upgrade. It will be removed at expiration date.',711);
+            $button_info_text = 'When you stop self renew, you dont spent credits. You can activate when you need it in a pleasure time.';
         }
         ?>
         <div class="cancel-subscription-button-description"><?=$button_info_text?></div>
