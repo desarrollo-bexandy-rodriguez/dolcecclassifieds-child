@@ -931,7 +931,7 @@ function child_validate_settings_form($action, $form_data='') {
             payment_canceled($item_id, $post_id, false);
 
             if(in_array($item_id, array("5", "6"))) {
-                die(json_encode(array('status' => 'ok', 'msg' => _d('Subscription canceled',601))));
+                die(json_encode(array('status' => 'ok', 'msg' => 'Self-renew stopped')));
             }
 
             switch ($item_id) {
@@ -952,12 +952,12 @@ function child_validate_settings_form($action, $form_data='') {
                     break;
             }
 
-            $msg = _d('Subscription canceled',601);
+            $msg = 'Self-renew stopped';
             if(get_post_meta($post_id, $expiration_meta, true)) {
                 $expiration_seconds = get_post_meta($post_id, $expiration_meta, true) - current_time('timestamp');
                 if($expiration_seconds > 0) {
                     // still active
-                    $msg .= ' <span>-</span> '._d('expires in',462).' '.secondsToTime($expiration_seconds);
+                    $msg .= ' <span>-</span> '._d('renew in',462).' '.secondsToTime($expiration_seconds);
                 }
             }
 

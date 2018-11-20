@@ -563,7 +563,7 @@ function child_ad_needs_payment_html($post_id="") {
                 <?php if($payment_data['push']['first']['price'] || current_user_can('level_10')) { ?>
                     <div class="product rad5">
 
-                        <h4><?= 'Self renew ad'?>
+                        <h4><?= 'Self-renew'?>
                         <?php
                         if(get_post_meta($post_id, 'push_ad', true) == "1") {
                             echo '<span class="purchased">'._d('purchased',460);
@@ -575,7 +575,7 @@ function child_ad_needs_payment_html($post_id="") {
                                     $text = get_post_meta($post_id, 'push_ad_recurring', true) ? _d('renews in',461) : _d('expires in',462);
                                     echo ' <span>-</span> '.$text.' '.secondsToTime($expiration_seconds);
                                 } elseif(!get_post_meta($post_id, 'push_ad_recurring', true)) {
-                                    echo ' <span>-</span> <span class="expired">'._d('expired',463).'</span>';
+                                    echo ' <span>-</span> <span class="expired">'.'stopped'.'</span>';
                                 }
                             }
                             echo '</span>';
@@ -590,7 +590,7 @@ function child_ad_needs_payment_html($post_id="") {
                                 <div class="clear5"></div>
                                 <form action="" method="post" class="expires-in l">
                                     <input type="hidden" name="upgrade_id" value="4" />
-                                    <div class="l"><?=_d('Expires in',465)?>:</div>
+                                    <div class="l"><?= 'Renew in' ?>:</div>
                                     <div class="fake-select fake-select-time rad3 no-selection l">
                                         <div class="first"><span class="text l"></span> <span class="icon icon-arrow-up hide"></span><span class="icon icon-arrow-down"></span></div>
                                         <div class="options rad5 shadow hide">
@@ -609,7 +609,7 @@ function child_ad_needs_payment_html($post_id="") {
                                         <svg version="1.1" class="icon icon-for-saving loader hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
                                     </div> <!-- add-upgrade-button -->
 
-                                    <div class="remove-upgrade-button round-corners-button rad25 l<?php if(!get_post_meta($post_id, 'push_ad', true)) echo " hide"; ?>" data-saving="<?=_d('Removing',467)?>" data-saved="<?=_d('Removed',468)?>" data-default="<?=_d('Remove',469)?>">
+                                    <div class="remove-upgrade-button round-corners-button rad25 l<?php if(!get_post_meta($post_id, 'push_ad', true)) echo " hide"; ?>" data-saving="<?= 'Sopping' ?>" data-saved="<?= 'Stopped' ?>" data-default="<?= 'Stop' ?>">
                                         <span class="text"><?=_d('Remove',469)?></span>
                                         <span class="icon icon-for-default icon-cancel"></span>
                                         <span class="icon icon-for-saved icon-checkmark hide"></span>
@@ -954,26 +954,27 @@ function generate_mycred_balance_buttons() {
             $balance = $mycred->get_users_balance( get_current_user_id() );
             $atts = array(
                 'gateway' => 'paypal-standard',
-                'amount'  => '100'
+                'amount'  => '100',
+                'class' => 'pay-button pay-button-paypal round-corners-button rad25'
             );
         }
     } ?>
     <div class="mycred-balance">
-        <h4>My Credits</h4>
-        <p>Credits Available</p>
+        <h3>My Credits</h3>
+        <h4>Credits Available</h4>
         <p><?= $balance ?> credits</p>
-        <p>Buy Credits</p>
+        <h4>Buy Credits</h4>
         <form>
             <label for="amount">Amount: </label>
-            <input type="text" name="amount" id="amount">
+            <input type="text" name="amount" id="amount" width="25">
             <output for="amount">€</output>
         </form>
-        <p>Buy with:</p>
-        <?php echo do_shortcode('[mycred_buy_form gateway="paypal-standard" amount=""]<span class="icon icon-paypal"></span> Paypal[/mycred_buy_form]'); ?>
+        <p>Pay with:
+        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<span class="icon icon-paypal"></span> Paypal[/mycred_buy]'); ?>
         <br>
-        <button class="pay-button pay-button-credit-card round-corners-button rad25"><span class="icon icon-credit-card"></span> <?=_d('Credit Card',705)?></button>
-        <br>
-        <button type="button" class="btn btn-secondary" onclick="window.location.href='mycred-checkout';">Buy Credits</button>
+        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<span class="icon icon-credit-card"></span> Credit Card[/mycred_buy]'); ?>
+        </p>
+        
     </div>
 <?php // function generate_mycred_balance_buttons()
 }
@@ -1063,8 +1064,8 @@ function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { 
         });
     </script>
     <div class="col-100 text-center">
-        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?= 'Stopping' ?>" data-saved="<?= 'Self renew stoped' ?>" data-default="<?= 'Stop self renew' ?>" data-error="<?=_d('Error',94)?>">
-            <span class="text"><?= 'Stop / Modified self renew' ?></span>
+        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?= 'Stopping' ?>" data-saved="<?= 'Self-renew stopped' ?>" data-default="<?= 'Stop self-renew' ?>" data-error="<?=_d('Error',94)?>">
+            <span class="text"><?= 'Stop/Modify self-renew' ?></span>
             <span class="icon icon-for-default icon-arrow-right"></span>
             <svg version="1.1" class="icon icon-for-saving loader r hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
             <span class="icon icon-for-saved icon-checkmark hide"></span>
@@ -1074,9 +1075,9 @@ function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { 
         <div class="clear5"></div>
         <?php
         if(in_array($item_id, array("5", "6"))) {
-            $button_info_text = 'When you stop self renew, you dont spent credits. You can activate when you need it in a pleasure time.';
+            $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
         } else {
-            $button_info_text = 'When you stop self renew, you dont spent credits. You can activate when you need it in a pleasure time.';
+            $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
         }
         ?>
         <div class="cancel-subscription-button-description"><?=$button_info_text?></div>

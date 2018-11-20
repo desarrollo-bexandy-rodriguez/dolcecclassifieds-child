@@ -447,15 +447,48 @@ div.child-whatsapp:before {
 
 /****************************** MyCred AutoRenova ******************************************/
 
+
 .ad-needs-payment-section .payment-buttons .pay-button-mycred {
 	margin-top: -15px;
+}
+
+@media screen and (max-width: 560px) {
+	.ad-needs-payment-section .payment-buttons .pay-button-mycred {
+		margin-top: 15px;
+	}
+}
+
+@media screen and (min-width: 561px) and (max-width: 900px) {
+	.ad-needs-payment-section .payment-buttons .pay-button-mycred {
+		margin-top: 0px;
+	}
+}
+
+@media screen and (max-width: 1080px) {
+	.mycred-balance {
+		margin-top: 15px;
+	}
+}
+
+@media screen and (min-width: 1081px) {
+	.mycred-balance {
+		margin-top: -15px;
+	}
+
+	.seller .mycred-balance {
+		margin-top: 0px;
+	}
 }
 
 .mycred-balance {
 	float: right;
 	padding: 10px 5px;
 	text-align: right;
+	border: 1px solid lavender;
+    background-color: azure;
+    border-radius: 25px;
 }
+
 
 .ad-needs-payment-section .message-top h4 {
 	color: #22a4e6;
@@ -467,4 +500,29 @@ div.child-whatsapp:before {
     text-align: center;
     text-transform: uppercase;
     font-weight: bolder;
+}
+
+.mycred-buy-link {
+
+    display: inline-block;
+    border-color: #22a4e6;
+    font-weight: bold;
+    font-size: 1em;
+    outline: none;
+    color: #22a4e6;
+    border: 2px solid #e6eaf2;
+    padding: 0px 30px;
+    line-height: 2.6em;
+    font-weight: 600;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 25px;
+    user-select: none;
+    box-sizing: border-box;
+    margin: 15px 0px 0px 5px;
+    font-family: 'Raleway', sans-serif;
+}
+
+input#amount  {
+	width: 100px;
 }
