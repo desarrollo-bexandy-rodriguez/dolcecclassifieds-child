@@ -40,7 +40,7 @@ if (function_exists('have_posts') && have_posts()){
 
 				$link	= strip_tags($contents);
 				$link	= preg_replace('/\s/', '', $link);
-				$link	= 'profile/'.$current_user->user_login;
+				$link	= 'profile/'.$current_user->display_name;
 				
 			// work out
 				if(!preg_match('%^http://%', $link)){
