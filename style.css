@@ -511,8 +511,8 @@ div.child-whatsapp:before {
     outline: none;
     color: #22a4e6;
     border: 2px solid #e6eaf2;
-    padding: 0px 30px;
-    line-height: 2.6em;
+    padding: 5px 25px;
+    line-height: 1em;
     font-weight: 600;
     background: #fff;
     cursor: pointer;
@@ -521,8 +521,14 @@ div.child-whatsapp:before {
     box-sizing: border-box;
     margin: 15px 0px 0px 5px;
     font-family: 'Raleway', sans-serif;
+    text-align: center;
 }
 
 input#amount  {
 	width: 50px;
+}
+
+.mycred-buy-link img {
+	margin-bottom: 0px;
+	padding-bottom: 0px;
 }

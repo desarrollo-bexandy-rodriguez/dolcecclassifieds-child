@@ -974,9 +974,9 @@ function generate_mycred_balance_buttons() {
             
         </form>
         <p>Pay with:
-        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<span class="icon icon-paypal"></span> Paypal[/mycred_buy]'); ?>
+        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/paypal.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/paypal-name.png">[/mycred_buy]'); ?>
         <br>
-        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<span class="icon icon-credit-card"></span> Credit Card[/mycred_buy]'); ?>
+        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/visa.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/mastercard.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/american-express.png"><br>Credit Card[/mycred_buy]'); ?>
         </p>
         
     </div>
