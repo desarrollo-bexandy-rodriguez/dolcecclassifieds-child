@@ -2530,7 +2530,7 @@ jQuery(document).ready(function($) {
 		form.find('.submit-button').attr('class', function(i, c){ return c.replace(/(^|\s)submit-button-\S+/g, ''); }).addClass('submit-button-loading');
 		$.ajax({
 			type: "POST",
-			url: wpvars.wpthemeurl+'/ajax/save-review.php',
+			url: wpvars.wpchildthemeurl+'/ajax/child-save-review.php',
 			data: { action: action, form_data: form_data },
 			cache: false,
 			timeout: 20000, // in milliseconds

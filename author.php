@@ -107,7 +107,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 			<?php if(get_query_var('page_section') == "reviews") { ?>
 				<div class="author-reviews-section rad5">
 					<div class="author-reviews-section-title">
-						<h3 class="l"><?=_d('%s has %s reviews',891,array('<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span><span class="mobile-line-break"></span>', '<span class="blue">'.$seller_reviews->found_posts.'</span>'))?><span class="last-word">&#8204;</span></h3>
+						<h3 class="l"><?=_d('%s has %s ratings',891,array('<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span><span class="mobile-line-break"></span>', '<span class="blue">'.$seller_reviews->found_posts.'</span>'))?><span class="last-word">&#8204;</span></h3>
 						<a class="back-to-the-ads round-corners-button rad25 r" href="<?=get_author_posts_url($seller->ID)?>"><?=_d('See the ads instead',901)?></a>
 					</div>
 					<div class="clear"></div>
@@ -137,7 +137,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 								<div class="clear20"></div>
 							</div> <!-- review-meta-info -->
 							<div class="review-text-wrapper">
-								<?php show_detailed_review_box("", "r", get_post_meta(get_the_ID(), 'delivery', true), get_post_meta(get_the_ID(), 'responsiveness', true), get_post_meta(get_the_ID(), 'friendliness', true)); ?>
+								<?php child_show_detailed_review_box("", "r", get_post_meta(get_the_ID(), 'delivery', true), get_post_meta(get_the_ID(), 'responsiveness', true), get_post_meta(get_the_ID(), 'friendliness', true)); ?>
 								<div class="review-text"><?=nl2br(stripslashes(get_the_content()))?></div>
 								<div class="clear"></div>
 							</div> <!-- review-text-wrapper -->
@@ -151,7 +151,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 									<input type="hidden" name="review_id" value="<?=get_the_ID()?>" />
 									<input type="hidden" name="action" value="update_review" />
 									<?php
-									$labels = array("delivery" => _d('Delivery',872), "responsiveness" => _d('Responsiveness',873), "friendliness" => _d('Friendliness',874));
+									$labels = array("delivery" => 'Hygiene', "responsiveness" => 'Amiability', "friendliness" => 'Satisfaction');
 									$label_values = array("delivery" => get_post_meta(get_the_ID(), 'delivery', true), "responsiveness" => get_post_meta(get_the_ID(), 'responsiveness', true), "friendliness" => get_post_meta(get_the_ID(), 'friendliness', true));
 									foreach ($labels as $key => $label) { ?>
 										<div class="label"><?=$label?></div>
@@ -668,7 +668,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 					<input type="hidden" name="action" value="<?=($user_has_review->posts[0] > 0 ? "update_review2" : "save_review")?>" />
 					<?=($user_has_review->posts[0] > 0 ? '<input type="hidden" name="review_id" value="'.$user_has_review->posts[0].'" />' : '')?>
 					<?php
-					$labels = array("delivery" => _d('Delivery',872), "responsiveness" => _d('Responsiveness',873), "friendliness" => _d('Friendliness',874));
+					$labels = array("delivery" => 'Hygiene', "responsiveness" => 'Amiability', "friendliness" => 'Satisfaction');
 					foreach ($labels as $key => $label) { ?>
 						<div class="label"><?=$label?></div>
 						<div class="err-msg err-msg-<?=$key?> hide"></div>
@@ -862,7 +862,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 				</div> <!-- seller-details -->
 
 				<div class="clear10"></div>
-				<?php show_detailed_review_box($seller->ID); ?>
+				<?php child_show_detailed_review_box($seller->ID); ?>
 				<div class="clear20"></div>
 				<?php
 					if(!is_user_logged_in()) {
@@ -871,7 +871,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 						$add_review_class = $seller->ID == $current_user->ID ? " add-review-disabled" : " add-review-popup";
 					}
 				?>
-				<div class="add-review rad25 big-button<?=$add_review_class?>"><span class="icon icon-plus2"></span> <?=_d('Add review',870)?></div>
+				<div class="add-review rad25 big-button<?=$add_review_class?>"><span class="icon icon-plus2"></span> <?='Add rating'?></div>
 
 				<div class="clear10"></div>
 				<div class="clear"></div>

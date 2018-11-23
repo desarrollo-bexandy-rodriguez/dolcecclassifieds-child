@@ -407,3 +407,39 @@ function child_shortcode_whatsapp_chat( $atts, $content = null ) {
 
 add_shortcode('childwhatsapp', 'child_shortcode_whatsapp_chat');
 
+/********************* Show Detailed Review Box **************************************/
+function child_show_detailed_review_box($user_id="", $class="", $delivery="", $responsiveness="", $friendliness="") {
+    if($user_id) {
+        $delivery = get_user_meta($user_id, 'delivery', true);
+        $responsiveness = get_user_meta($user_id, 'responsiveness', true);
+        $friendliness = get_user_meta($user_id, 'friendliness', true);
+    }
+    $titles = array('Hygiene' => $delivery, 'Amiability' => $responsiveness, 'Satisfaction' => $friendliness);
+    ?>
+    <div class="seller-detailed-reviews <?=$class?>">
+        <?php foreach ($titles as $title => $rating) { ?>
+            <div class="label auto-font-size"><?=$title?></div>
+            <div class="stars-wrapper">
+                <?php for ($i=1; $i <= 5; $i++) { ?>
+                    <div class="star-wrapper">
+                        <div class="star-wrapper2 l">
+                        <div class="star"><span class="icon icon-star rad3"></span></div>
+                        <?php if($rating >= $i) { ?>
+                            <div class="star"><span class="icon star-yellow icon-star rad3"></span></div>
+                        <?php } else { ?>
+                            <?php if(ceil($rating) == $i) {
+                                    $width = ' style="width: '.(($rating + 1 - $i) * 100).'%"';
+                                ?>
+                                <div class="star"<?=$width?>><span class="icon star-yellow icon-star rad3"></span></div>
+                            <?php } ?>
+                        <?php } ?>
+                        </div> <!-- star-wrapper2 -->
+                    </div> <!-- star-wrapper -->
+                <?php } ?>
+            </div> <!-- stars-wrapper -->
+            <div class="clear10"></div>
+        <?php } ?>
+        <div class="clear"></div>
+    </div> <!-- seller-detailed-reviews -->
+<?php
+}
