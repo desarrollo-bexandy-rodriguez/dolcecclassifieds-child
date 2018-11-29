@@ -1,8 +1,16 @@
+
 (function($) {
 
 	function find_page_number( element ) {
         element.find('span').remove();
-        return parseInt( element.html() );
+        if (element.attr('href').indexOf('/page/') > 0) {
+        	start = element.attr('href').indexOf('/page/') + 6;
+        	end = element.attr('href').length -1;
+        	return parseInt( element.attr('href').substring(start, end) );
+        } else {
+        	return parseInt( 1 );
+        }
+        
 	}
 
 	$(document).on( 'click', '.pagination a', function( event ) {

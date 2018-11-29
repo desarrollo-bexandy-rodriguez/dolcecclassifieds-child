@@ -140,13 +140,11 @@ function update_recurring_push_ad($post_id = null) {
         // error if user not have founds
         if($product_price >  $balance)
             return false;
+
         // Adjust balance with a log entry
-        $mycred->add_creds(
-            'Recurring Payment',
-            $author_id,
-            $product_price * -1,
-            $item_name
-        );
+        //$mycred->add_creds( 'Recurring Payment', $author_id, $product_price * -1, $item_name );
+        $amount  = $product_price * -1;
+        $mycred->update_users_balance( $author_id, $amount );
     }
     return true;
 } // function update_recurring_push_ad()
