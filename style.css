@@ -378,6 +378,8 @@ footer .widget-footer {
 	}
 }
 
+/****************************** WHATSAPP ******************************************/
+
 div.child-whatsapp {
     min-width: 50px;
     max-width: 190px;
@@ -399,6 +401,27 @@ div.child-whatsapp:before {
     content: '\ea93' !important;
     margin-left: 0px;
     margin-right: 5px;
+}
+
+div.child-whatsapp a.awhatsapp span {
+	color: #fff;
+}
+
+div.container-administrativo {
+	border-top-width: 1px;
+    border-top-style: double;
+    border-top-color: #e6eaf2;
+    margin-top: 30px;
+
+}
+div.contacto-administrativo {
+	color: #49586a;
+    padding: 5px 0px;
+    font-weight: 500;
+    text-align: center;
+    background-color: #e6eaf2;
+    margin: 5px 0px;
+    border-radius: 5px;
 }
 
 /****************************** SPLASH PAGE ******************************************/

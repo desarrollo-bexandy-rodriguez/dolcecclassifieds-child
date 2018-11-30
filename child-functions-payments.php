@@ -950,160 +950,164 @@ function child_generate_payment_option_form($payment_name, $form_payment_data=""
 function generate_mycred_balance_buttons() {
     if (class_exists('myCRED_Core')) {
         $mycred=mycred();
-        if (!$mycred->exclude_user(get_current_user_id()) ) {
+        if (!$mycred->exclude_user(get_current_user_id()) && get_current_user_id() != 1 ) {
             $balance = $mycred->get_users_balance( get_current_user_id() );
             $atts = array(
                 'gateway' => 'paypal-standard',
                 'amount'  => '100',
                 'class' => 'pay-button pay-button-paypal round-corners-button rad25'
-            );
-        }
-    } ?>
-    <div class="mycred-balance">
-        <h3>My Credits</h3>
-        <h4>Credits Available</h4>
-        <p><?= $balance ?> credits</p>
-        <h4>Buy Credits</h4>
-        <form id="mycred-balance" oninput="result.value=parseInt(amount.value)*parseInt(tasa.value)">
-            <label for="amount">Amount: </label>
-            <input type="number" name="amount" id="amount" value="10" min="10"> Credits
-            <input type="hidden" name="tasa" id="tasa" value="0.5">
-            <p>
-                = <output name="result" id="result" for="amount tasa">0</output>
-            </p>
-            
-        </form>
-        <p>Pay with:
-        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/paypal.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/paypal-name.png">[/mycred_buy]'); ?>
-        <br>
-        <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/visa.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/mastercard.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/american-express.png">[/mycred_buy]'); ?>
-        </p>
-        
-    </div>
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $('form#mycred-balance input#amount').on('change', function(event) {
-                var input = $(this);
-                var val = input.val();
-                var exchange = $('input#tasa').val();
+            ); ?>
+            <div class="mycred-balance">
+                <h3>My Credits</h3>
+                <h4>Credits Available</h4>
+                <p><?= $balance ?> credits</p>
+                <h4>Buy Credits</h4>
+                <form id="mycred-balance" oninput="result.value=parseInt(amount.value)*parseInt(tasa.value)">
+                    <label for="amount">Amount: </label>
+                    <input type="number" name="amount" id="amount" value="10" min="10"> Credits
+                    <input type="hidden" name="tasa" id="tasa" value="0.5">
+                    <p>
+                        = <output name="result" id="result" for="amount tasa">0</output>
+                    </p>
+                    
+                </form>
+                <p>Pay with:
+                <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/paypal.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/paypal-name.png">[/mycred_buy]'); ?>
+                <br>
+                <?php echo do_shortcode('[mycred_buy gateway="paypal-standard" amount=""]<img src="'.get_stylesheet_directory_uri().'/icon-font/visa.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/mastercard.png"><img src="'.get_stylesheet_directory_uri().'/icon-font/american-express.png">[/mycred_buy]'); ?>
+                </p>
                 
-                var result = val * exchange;
-                $('output#result').text(result+' €');
+            </div>
+            <script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    $('form#mycred-balance input#amount').on('change', function(event) {
+                        var input = $(this);
+                        var val = input.val();
+                        var exchange = $('input#tasa').val();
+                        
+                        var result = val * exchange;
+                        $('output#result').text(result+' €');
 
-                $('div.mycred-balance').find('a').each(function() {
-                   var url = $( this ).attr('href');
-                   var updurl = url.replace(/(amount=).*/,'amount=' + val );
-                   $( this ).attr('href', updurl);
-                });                
-        });
-    });
-    </script>
+                        $('div.mycred-balance').find('a').each(function() {
+                           var url = $( this ).attr('href');
+                           var updurl = url.replace(/(amount=).*/,'amount=' + val );
+                           $( this ).attr('href', updurl);
+                        });                
+                });
+            });
+            </script>
+
+       <?php }
+    } ?>
+    
 <?php // function generate_mycred_balance_buttons()
 }
 
 function child_generate_mycred_cancel_subscription_button($item_id, $post_id) { ?>
-    <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            $('.cancel-subscription-button-stripe').on('click', function(event) {
-                var button = $(this);
-                var item_id = $(this).data('item-id');
-                if(button.hasClass('cancel-subscription-button-noclick')) {
-                    return false;
-                } else {
-                    $(this).addClass('cancel-subscription-button-noclick cancel-subscription-button-active');
-                }
+    <?php if (get_current_user_id() != 1 ): ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function($) {
+                $('.cancel-subscription-button-stripe').on('click', function(event) {
+                    var button = $(this);
+                    var item_id = $(this).data('item-id');
+                    if(button.hasClass('cancel-subscription-button-noclick')) {
+                        return false;
+                    } else {
+                        $(this).addClass('cancel-subscription-button-noclick cancel-subscription-button-active');
+                    }
 
-                button.find('.icon').hide();
-                button.find('.text').text(button.data('saving')).parent().find('.icon-for-saving').show();
+                    button.find('.icon').hide();
+                    button.find('.text').text(button.data('saving')).parent().find('.icon-for-saving').show();
 
-                var form_data = [];
-                form_data.push({name: 'item_id', value: item_id});
-                form_data.push({name: 'post_id', value: '<?=$post_id?>'});
-                $.ajax({
-                    type: "POST",
-                    url: wpvars.wpchildthemeurl+'/ajax/child-save-settings.php',
-                    data: { action: 'cancel-mycred-subscription', form_data: form_data },
-                    cache: false,
-                    timeout: 30000, // in milliseconds
-                    success: function(raw_data) {
-                        var is_err = false;
-                        var is_json = true;
-                        try {
-                            var data = JSON.parse(raw_data);
-                        } catch(err) {
-                            is_json = false;
-                        }
-                        if(is_json && data != null) {
-                            if(data.status == 'ok') {
-                                <?php if(in_array($item_id, array("5", "6"))) { ?>
-                                    location.reload();
-                                <?php } else { ?>
-                                    if(data.msg) {
-                                        button.parents('.product').find('.purchased').fadeOut('fast', function() {
-                                            $(this).html(data.msg).fadeIn('200');
-                                        });
-                                    }
-                                <?php } ?>
-
-                                button.find('.icon').hide();
-                                button.find('.text').text(button.data('saved')).parent().find('.icon-for-saved').show();
-                                <?php if(!in_array($item_id, array("5", "6"))) { ?>
-                                setTimeout(function() {
-                                    button.parent().fadeOut('fast');
-                                }, 3000);
-                                <?php } ?>
-                                setTimeout(function() {
-                                    <?php if(in_array($product_id, array("5", "6"))) { ?>
+                    var form_data = [];
+                    form_data.push({name: 'item_id', value: item_id});
+                    form_data.push({name: 'post_id', value: '<?=$post_id?>'});
+                    $.ajax({
+                        type: "POST",
+                        url: wpvars.wpchildthemeurl+'/ajax/child-save-settings.php',
+                        data: { action: 'cancel-mycred-subscription', form_data: form_data },
+                        cache: false,
+                        timeout: 30000, // in milliseconds
+                        success: function(raw_data) {
+                            var is_err = false;
+                            var is_json = true;
+                            try {
+                                var data = JSON.parse(raw_data);
+                            } catch(err) {
+                                is_json = false;
+                            }
+                            if(is_json && data != null) {
+                                if(data.status == 'ok') {
+                                    <?php if(in_array($item_id, array("5", "6"))) { ?>
                                         location.reload();
                                     <?php } else { ?>
-                                        window.location = '<?=get_post_permalink($post_id)?>';
+                                        if(data.msg) {
+                                            button.parents('.product').find('.purchased').fadeOut('fast', function() {
+                                                $(this).html(data.msg).fadeIn('200');
+                                            });
+                                        }
                                     <?php } ?>
-                                }, 4000);
-                            } else {
-                                is_err = true;
-                            }//if error
-                        }
 
-                        if(is_err || !is_json || !raw_data) {
+                                    button.find('.icon').hide();
+                                    button.find('.text').text(button.data('saved')).parent().find('.icon-for-saved').show();
+                                    <?php if(!in_array($item_id, array("5", "6"))) { ?>
+                                    setTimeout(function() {
+                                        button.parent().fadeOut('fast');
+                                    }, 3000);
+                                    <?php } ?>
+                                    setTimeout(function() {
+                                        <?php if(in_array($product_id, array("5", "6"))) { ?>
+                                            location.reload();
+                                        <?php } else { ?>
+                                            window.location = '<?=get_post_permalink($post_id)?>';
+                                        <?php } ?>
+                                    }, 4000);
+                                } else {
+                                    is_err = true;
+                                }//if error
+                            }
+
+                            if(is_err || !is_json || !raw_data) {
+                                button.find('.icon').hide();
+                                button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
+                                setTimeout(function() {
+                                    button.find('.icon').hide();
+                                    button.removeClass('cancel-subscription-button-noclick').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
+                                }, 3000);
+                            }
+                        },
+                        error: function(request, status, err) {
                             button.find('.icon').hide();
-                            button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
+                            button.find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
                             setTimeout(function() {
                                 button.find('.icon').hide();
-                                button.removeClass('cancel-subscription-button-noclick').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
+                                button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
                             }, 3000);
                         }
-                    },
-                    error: function(request, status, err) {
-                        button.find('.icon').hide();
-                        button.find('.text').text(button.data('error')).parent().find('.icon-for-error').show();
-                        setTimeout(function() {
-                            button.find('.icon').hide();
-                            button.removeClass('cancel-subscription-button-active').find('.text').text(button.data('default')).parent().find('.icon-for-default').show();
-                        }, 3000);
-                    }
+                    });
                 });
             });
-        });
-    </script>
-    <div class="col-100 text-center">
-        <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?= 'Stopping' ?>" data-saved="<?= 'Self-renew stopped' ?>" data-default="<?= 'Stop self-renew' ?>" data-error="<?=_d('Error',94)?>">
-            <span class="text"><?= 'Stop/Modify self-renew' ?></span>
-            <span class="icon icon-for-default icon-arrow-right"></span>
-            <svg version="1.1" class="icon icon-for-saving loader r hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
-            <span class="icon icon-for-saved icon-checkmark hide"></span>
-            <span class="icon icon-for-error icon-cancel hide"></span>
-        </div> <!-- cancel-subscription-button -->
-        <?php generate_mycred_balance_buttons(); ?>
-        <div class="clear5"></div>
-        <?php
-        if(in_array($item_id, array("5", "6"))) {
-            $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
-        } else {
-            $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
-        }
-        ?>
-        <div class="cancel-subscription-button-description"><?=$button_info_text?></div>
-    </div>
+        </script>
+        <div class="col-100 text-center">
+            <div class="cancel-subscription-button cancel-subscription-button-stripe round-corners-button rad25" data-item-id="<?=$item_id?>" data-saving="<?= 'Stopping' ?>" data-saved="<?= 'Self-renew stopped' ?>" data-default="<?= 'Stop self-renew' ?>" data-error="<?=_d('Error',94)?>">
+                <span class="text"><?= 'Stop/Modify self-renew' ?></span>
+                <span class="icon icon-for-default icon-arrow-right"></span>
+                <svg version="1.1" class="icon icon-for-saving loader r hide" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/></path></svg>
+                <span class="icon icon-for-saved icon-checkmark hide"></span>
+                <span class="icon icon-for-error icon-cancel hide"></span>
+            </div> <!-- cancel-subscription-button -->
+            <?php generate_mycred_balance_buttons(); ?>
+            <div class="clear5"></div>
+            <?php
+            if(in_array($item_id, array("5", "6"))) {
+                $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
+            } else {
+                $button_info_text = 'If you stop the self-renew it will not consume the credits, you can activate it when you need it at the moment that is most comfortable for you';
+            }
+            ?>
+            <div class="cancel-subscription-button-description"><?=$button_info_text?></div>
+        </div>
+    <?php endif ?>
     <?php
 }
 

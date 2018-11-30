@@ -109,10 +109,8 @@ function check_expired_recurring_push_ads() {
                 delete_post_meta(get_the_ID(), 'push_ad_recurring');
                 delete_post_meta(get_the_ID(), 'push_ad_recurring_period');
             } else {
-				if(get_post_meta(get_the_ID(), 'last_pushed_date', true) < date("Y-m-d H:i:s", current_time('timestamp'))) {
-					wp_update_post(array('ID' => get_the_ID(), 'post_date' => date("Y-m-d H:i:s", current_time('timestamp'))));
-					update_post_meta(get_the_ID(), 'last_pushed_date', date("Y-m-d H:i:s", current_time('timestamp')));
-				}
+				wp_update_post(array('ID' => get_the_ID(), 'post_date' => date("Y-m-d H:i:s", current_time('timestamp'))));
+				update_post_meta(get_the_ID(), 'last_pushed_date', date("Y-m-d H:i:s", current_time('timestamp')));
 				$push_ad_recurring_period = get_post_meta(get_the_ID(), 'push_ad_recurring_period', true);
                 update_post_meta(get_the_ID(), 'push_ad_expiration', strtotime("+$push_ad_recurring_period") );
                 delete_post_meta(get_the_ID(), 'needs_payment');

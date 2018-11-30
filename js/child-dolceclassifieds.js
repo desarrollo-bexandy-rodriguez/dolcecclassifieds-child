@@ -2464,9 +2464,6 @@ jQuery(document).ready(function($) {
 		$('html, body').animate({ scrollTop: $('.user-items-wrapper').offset().top }, 200);
 		$('.user-items-wrapper .user-items, .user-items-wrapper .author-reviews-section').hide();
 		$('.user-items-wrapper .add-user-review').fadeIn('100');
-		setTimeout(function() {
-			$('.user-items-wrapper .add-user-review .add-user-review-form .review-textarea').attr('style', '').height( $('.user-items-wrapper .add-user-review .add-user-review-form .review-textarea')[0].scrollHeight );
-		}, 10);
 	});
 	$('.author-page .add-user-review .close').on('click', function(event) {
 		$('.user-items-wrapper .user-items, .user-items-wrapper .author-reviews-section').show();
@@ -2476,9 +2473,6 @@ jQuery(document).ready(function($) {
 		$('.user-items-wrapper .user-items, .user-items-wrapper .author-reviews-section').hide();
 		$('.user-items-wrapper .add-user-review .add-user-review-form').fadeIn('100');
 		$('.user-items-wrapper .review-posted-successfully').hide();
-		setTimeout(function() {
-			$('.user-items-wrapper .add-user-review .add-user-review-form .review-textarea').attr('style', '').height( $('.user-items-wrapper .add-user-review .add-user-review-form .review-textarea')[0].scrollHeight );
-		}, 10);
 	});
 
 	// hovering over stars

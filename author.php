@@ -107,7 +107,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 			<?php if(get_query_var('page_section') == "reviews") { ?>
 				<div class="author-reviews-section rad5">
 					<div class="author-reviews-section-title">
-						<h3 class="l"><?=_d('%s has %s ratings',891,array('<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span><span class="mobile-line-break"></span>', '<span class="blue">'.$seller_reviews->found_posts.'</span>'))?><span class="last-word">&#8204;</span></h3>
+						<h3 class="l"><?= '<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span><span class="mobile-line-break"></span>'.'  has '. '<span class="blue">'.$seller_reviews->found_posts.'</span>'.' ratings' ?><span class="last-word">&#8204;</span></h3>
 						<a class="back-to-the-ads round-corners-button rad25 r" href="<?=get_author_posts_url($seller->ID)?>"><?=_d('See the ads instead',901)?></a>
 					</div>
 					<div class="clear"></div>
@@ -131,7 +131,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 								<a class="review-author l" href="<?=get_author_posts_url(get_the_author_meta('ID'))?>"><?=$user_avatar.get_the_author_meta('display_name').is_user_verified(get_the_author_meta('ID'))?></a>
 								<div class="review-date l">&nbsp;<?=date_time_ago(get_the_time('U'))?></div>
 								<?php if(is_user_logged_in() && get_the_author_meta('ID') == $current_user->ID || current_user_can('level_10')) { ?>
-									<div class="delete-review rad25 r no-selection" data-swal-title="<?=_d('Are you sure?',96)?>" data-swal-text="<?=_d('Are you sure you want to delete this review?',908)?>" data-swal-button="<?=_d('Delete',902)?>" data-swal-cancel="<?=_d('Cancel',543)?>" data-swal-ok-title="<?=_d('Deleted!',910)?>" data-swal-ok-text="<?=_d('Your review was deleted.',911)?><br /><?=_d('We are refreshing the page...',673)?>" data-review-id="<?=get_the_ID()?>"><span class="icon icon-delete"></span> <?=_d('Delete',902)?></div>
+									<div class="delete-review rad25 r no-selection" data-swal-title="<?=_d('Are you sure?',96)?>" data-swal-text="<?= 'Are you sure you want to delete this rating?' ?>" data-swal-button="<?=_d('Delete',902)?>" data-swal-cancel="<?=_d('Cancel',543)?>" data-swal-ok-title="<?=_d('Deleted!',910)?>" data-swal-ok-text="<?= 'Your rating was deleted.' ?><br /><?=_d('We are refreshing the page...',673)?>" data-review-id="<?=get_the_ID()?>"><span class="icon icon-delete"></span> <?=_d('Delete',902)?></div>
 									<div class="edit-review rad25 r no-selection"><span class="icon icon-edit"></span> <?=_d('Edit',903)?></div>
 								<?php } ?>
 								<div class="clear20"></div>
@@ -145,7 +145,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 							<?php if(is_user_logged_in() && get_the_author_meta('ID') == $current_user->ID || current_user_can('level_10')) { ?>
 								<div class="edit-review-form add-user-review-form text-center form-styling hide">
 									<div class="close rad25 r no-selection"><span class="icon icon-cancel"></span> <?=_d('close',195)?></div>
-									<h3 class="text-center"><span class="text"><?=_d('Edit your review for',904)?></span> <span class="seller-name"><?=$seller->display_name.is_user_verified($seller->ID)?></span></h3>
+									<h3 class="text-center"><span class="text"><?= 'Edit your rating for' ?></span> <span class="seller-name"><?=$seller->display_name.is_user_verified($seller->ID)?></span></h3>
 									<div class="err-msg form-err-msg hide"></div>
 									<div class="err-msg err-msg-review_id hide"></div>
 									<input type="hidden" name="review_id" value="<?=get_the_ID()?>" />
@@ -163,8 +163,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 									<?php } ?>
 									<div class="clear"></div>
 									<div class="err-msg err-msg-review_text hide"></div>
-									<textarea name="review_text" class="review-textarea rad5" placeholder="<?=_d('Leave a message about this seller',875)?>"><?=stripslashes(get_the_content())?></textarea>
-									<div class="review-text-char-limit text-center" data-char-limit="<?=$review_char_limit?>"><span class="limit"><?=$review_char_limit?></span> <?=_d('characters left',876)?></div>
+
 
 									<div class="buttons text-center">
 										<button class="button submit-button submit-button-default round-corners-button rad25" name="submit">
@@ -173,7 +172,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 											<span class="icon for-done icon-checkmark hide"></span>
 											<span class="icon for-err icon-cancel hide"></span>
 
-											<span class="button-text text-default hide"><?=_d('Update review',870)?></span>
+											<span class="button-text text-default hide"><?= 'Update rating' ?></span>
 											<span class="button-text text-loading hide"><?=_d('Saving',92)?></span>
 											<span class="button-text text-done hide"><?=_d('Saved',93)?></span>
 											<span class="button-text text-err hide"><?=_d('Error',94)?></span>
@@ -182,84 +181,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 								</div> <!-- add-user-review-form -->
 							<?php } ?>
 
-							<?php if(count($comments) > 0) { ?>
-								<?php foreach ($comments as $comment) { ?>
-								<div class="seller-reply rad5 col-90 r">
-									<a class="review-author l" href="<?=get_author_posts_url(get_post_meta(get_the_ID(), 'review_for', true))?>"><?=$seller_avatar.$review_for_user_data->display_name.is_user_verified($review_for_user_data->ID)?></a>
-									<div class="from l"><?=_d('replied to the review',899)?></div>
-									<?php if(is_user_logged_in() && $comment->user_id == $current_user->ID || current_user_can('level_10')) { ?>
-										<div class="delete-review rad25 r no-selection" data-swal-title="<?=_d('Are you sure?',96)?>" data-swal-text="<?=_d('Are you sure you want to delete your reply?',909)?>" data-swal-button="<?=_d('Delete',902)?>" data-swal-cancel="<?=_d('Cancel',543)?>" data-swal-ok-title="<?=_d('Deleted!',910)?>" data-swal-ok-text="<?=_d('Your reply was deleted.',912)?><br /><?=_d('We are refreshing the page...',673)?>" data-review-reply-id="<?=$comment->comment_ID?>"><span class="icon icon-delete"></span> <?=_d('Delete',902)?></div>
-										<div class="edit-review rad25 r no-selection"><span class="icon icon-edit"></span> <?=_d('Edit',903)?></div>
-									<?php } ?>
-									<div class="review-date r"><?=date_time_ago(strtotime($comment->comment_date))?></div>
-									<div class="clear10"></div>
-									<div class="seller-reply-text"><?=nl2br(stripslashes($comment->comment_content))?></div>
-									<?php if(is_user_logged_in() && $comment->user_id == $current_user->ID || current_user_can('level_10')) { ?>
-										<div class="reply seller-reply-form-update form-styling hide">
-											<div class="reply-area">
-												<textarea class="reply-textarea rad5 col-100" name="reply_text" placeholder="<?=_d('Leave a reply to this review',897)?>"><?=stripslashes($comment->comment_content)?></textarea>
-												<div class="review-text-char-limit text-center" data-char-limit="<?=$review_char_limit?>"><span class="limit"><?=$review_char_limit?></span> <?=_d('characters left',876)?></div>
 
-												<div class="buttons text-center">
-													<button class="button submit-button submit-button-default round-corners-button rad25 no-selection" name="submit" data-review-id="<?=$comment->comment_ID?>">
-														<span class="icon for-default icon-update hide"></span>
-														<svg class="icon for-loading loader hide" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" /></path></svg>
-														<span class="icon for-done icon-checkmark hide"></span>
-														<span class="icon for-err icon-cancel hide"></span>
-
-														<span class="button-text text-default hide"><?=_d('Update review',907)?></span>
-														<span class="button-text text-loading hide"><?=_d('Saving',92)?></span>
-														<span class="button-text text-done hide"><?=_d('Saved',93)?></span>
-														<span class="button-text text-err hide"><?=_d('Error',94)?></span>
-													</button>
-													<div class="cancel-reply round-corners-button rad25 no-selection"><?=_d('Cancel',543)?></div>
-												</div> <!-- buttons -->
-												<div class="clear"></div>
-											</div> <!-- reply-area -->
-											<div class="clear"></div>
-										</div> <!-- reply -->
-									<?php } ?>
-								</div> <!-- seller-reply -->
-								<?php } ?>
-							<?php } ?>
-
-							<?php if(is_user_logged_in() && get_post_meta(get_the_ID(), 'review_for', true) == $current_user->ID && count($comments) == "0") { ?>
-								<div class="reply seller-reply-form form-styling">
-									<div class="action-button reply-button l rad25 no-selection"><span class="icon icon-edit"></span> <?=_d('Reply to review',896)?></div>
-									<div class="action-button close-button r rad25 hide no-selection"><span class="icon icon-cancel"></span> <?=_d('Close',55)?></div>
-									<div class="clear"></div>
-									<div class="reply-area hide">
-										<textarea class="reply-textarea rad5 col-100" name="reply_text" placeholder="<?=_d('Leave a reply to this review',897)?>"></textarea>
-										<div class="review-text-char-limit text-center" data-char-limit="<?=$review_char_limit?>"><span class="limit"><?=$review_char_limit?></span> <?=_d('characters left',876)?></div>
-
-										<div class="buttons text-center">
-											<button class="submit-button submit-button-default round-corners-button rad25 no-selection" name="submit" data-review-id="<?=get_the_ID()?>">
-												<span class="icon for-default icon-plus2 hide"></span>
-												<svg class="icon for-loading loader hide" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve"><path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" /></path></svg>
-												<span class="icon for-done icon-checkmark hide"></span>
-												<span class="icon for-err icon-cancel hide"></span>
-
-												<span class="button-text text-default hide"><?=_d('Add review',870)?></span>
-												<span class="button-text text-loading hide"><?=_d('Saving',92)?></span>
-												<span class="button-text text-done hide"><?=_d('Saved',93)?></span>
-												<span class="button-text text-err hide"><?=_d('Error',94)?></span>
-											</button>
-										</div> <!-- buttons -->
-										<div class="clear"></div>
-									</div> <!-- reply-area -->
-									<div class="clear"></div>
-								</div> <!-- reply -->
-
-								<?php if(count($comments) == "0") { // placeholder html to place the seller reply after submit ?>
-									<div class="seller-reply rad5 col-90 r hide">
-										<a class="review-author l" href="<?=get_author_posts_url(get_post_meta(get_the_ID(), 'review_for', true))?>"><?=$seller_avatar.$current_user->display_name.is_user_verified($current_user->ID)?></a>
-										<div class="from l"><?=_d('replied to the review',899)?></div>
-										<div class="review-date r"><?=_d('now',363)?></div>
-										<div class="clear10"></div>
-										<div class="seller-reply-text"></div>
-									</div> <!-- seller-reply -->
-								<?php } ?>
-							<?php } ?>
 
 							<div class="clear"></div>
 						</div> <!-- review -->
@@ -661,7 +583,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 				$class = $user_has_review->found_posts == "0" ? "" : " hide";
 				?>
 				<div class="add-user-review-form text-center form-styling<?=$class?>">
-					<h3 class="text-center"><span class="text"><?=_d('Write a review for',871)?></span> <span class="seller-name"><?=$seller->display_name.is_user_verified($seller->ID)?></span></h3>
+					<h3 class="text-center"><span class="text"><?= 'Give a rating for' ?></span> <span class="seller-name"><?=$seller->display_name.is_user_verified($seller->ID)?></span></h3>
 					<div class="err-msg form-err-msg hide"></div>
 					<div class="err-msg err-msg-seller_id hide"></div>
 					<input type="hidden" name="seller_id" value="<?=$seller->ID?>" />
@@ -679,8 +601,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 					<?php } ?>
 					<div class="clear"></div>
 					<div class="err-msg err-msg-review_text hide"></div>
-					<textarea name="review_text" class="review-textarea rad5" placeholder="<?=_d('Leave a message about this seller',875)?>"><?=get_post_field('post_content', $user_has_review->posts[0])?></textarea>
-					<div class="review-text-char-limit text-center" data-char-limit="<?=$review_char_limit?>"><span class="limit"><?=$review_char_limit?></span> <?=_d('characters left',876)?></div>
+
 
 					<div class="buttons text-center">
 						<button class="button submit-button submit-button-default round-corners-button rad25" name="submit">
@@ -689,7 +610,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 							<span class="icon for-done icon-checkmark hide"></span>
 							<span class="icon for-err icon-cancel hide"></span>
 
-							<span class="button-text text-default hide"><?=_d('Add review',870)?></span>
+							<span class="button-text text-default hide"><?= 'Add rating' ?></span>
 							<span class="button-text text-loading hide"><?=_d('Saving',92)?></span>
 							<span class="button-text text-done hide"><?=_d('Saved',93)?></span>
 							<span class="button-text text-err hide"><?=_d('Error',94)?></span>
@@ -701,9 +622,9 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 					<div class="icon-for-alert rad50"><span class="icon icon-checkmark"></span></div>
 					<div class="clear"></div>
 					<div class="message">
-						<p><?=_d('Your review was posted successfully.',889)?></p>
-						<p><?=_d('Your rating for %s is',890,'<b class="seller-name">'.$seller->display_name.is_user_verified($seller->ID).'</b>')?> <?=get_user_rating('', '', get_post_meta($user_has_review->posts[0], 'rating', true))?>
-						<div class="edit-your-review rad25"><span class="icon icon-edit"></span> <?=_d('Edit your review',914)?></div>
+						<p><?= 'Your rating was posted successfully.'?></p>
+						<p><?= 'Your rating for '.'<b class="seller-name">'.$seller->display_name.is_user_verified($seller->ID).'</b>'.' is' ?> <?=get_user_rating('', '', get_post_meta($user_has_review->posts[0], 'rating', true))?>
+						<div class="edit-your-review rad25"><span class="icon icon-edit"></span> <?= 'Edit your rating'?></div>
 					</div>
 				</div>
 			</div> <!-- add-user-review -->
@@ -734,7 +655,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 			<div class="user-account-links rad5">
 				<h3><span class="icon icon-settings"></span> <?=_d('Account links',918)?><span class="icon arrow icon-arrow-down r"></span><span class="icon arrow icon-arrow-up hide r"></span></h3>
 				<ul class="user-account-links-inner l">
-					<li><a class="auto-font-size" href="<?=get_author_posts_url($seller->ID)?>reviews/"><span><span class="icon icon-star"></span> <?=_d('My Reviews',894)?></span></a></li>
+					<li><a class="auto-font-size" href="<?=get_author_posts_url($seller->ID)?>reviews/"><span><span class="icon icon-star"></span> <?= 'My Ratings' ?></span></a></li>
 					<?php if(get_option('allow_private_messages') == "1" && defined('private_messages_plugin')) { ?>
 					<li>
 						<a class="auto-font-size" href="<?=get_permalink(get_option('user_private_messages')); ?>" title="<?=_d('Messages',67)?>">
@@ -836,7 +757,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 				?>
 				<div class="user-rating-wrapper">
 					<?=get_user_rating($seller->ID,"large")?>
-					<div class="total-reviews"><b><?=$seller_reviews->found_posts?></b> <?=strtolower(_d('reviews',869))?></div>
+					<div class="total-reviews"><b><?=$seller_reviews->found_posts?></b> <?=strtolower('ratings')?></div>
 				</div><a href="<?=get_author_posts_url($seller->ID)?>" class="user-avatar-wrapper"><img src="<?=get_user_avatar($seller->ID)?>" alt="<?=$seller->display_name?>" class="avatar rad50" /></a><div class="send-message-wrapper"><div class="send-message rad50<?=$send_message_class?>" title="<?=_d('Send message',179)?>"><span class="icon icon-envelope"></span></div></div>
 				<?php if(is_user_logged_in() && $seller->ID != $current_user->ID) { private_message_form($seller->ID); } ?>
 
@@ -881,7 +802,7 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 
 		<?php if($seller_reviews->found_posts > 0 && get_query_var('page_section') != "reviews") { ?>
 		<div class="latest-reviews rad5">
-			<h4><?=_d('%s has %s reviews',891,array('<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span>', '<span class="blue">'.$seller_reviews->found_posts.'</span>'))?></h4>
+			<h4><?= '<span class="blue">'.$seller->display_name.is_user_verified($seller->ID).'</span>'. '  has'. '<span class="blue">'.$seller_reviews->found_posts.'</span>'.' ratings' ?></h4>
 			<?php
 				$truncated_seller_reviews = array_slice($seller_reviews->posts, 0, 3);
 				foreach ($truncated_seller_reviews as $review) {
@@ -909,13 +830,17 @@ $seller_reviews = new WP_Query($seller_reviews_args);
 				</div>
 			<?php } ?>
 			<div class="clear"></div>
-			<a class="see-all-reviews rad25 text-center" href="<?=get_author_posts_url($seller->ID)?>reviews/"><span class="icon icon-star"></span> <?=_d('See all reviews',895)?></a>
+			<a class="see-all-reviews rad25 text-center" href="<?=get_author_posts_url($seller->ID)?>reviews/"><span class="icon icon-star"></span> <?= 'See all ratings'?></a>
 			<div class="clear"></div>
 		</div> <!-- latest-reviews -->
 		<?php } ?>
+		<div class="container-administrativo">
+				<div class="contacto-administrativo">Contacto Administrativo del Sitio Web</div>
+				<?php echo do_shortcode('[childwhatsapp phone="+34698731572" blank="true"]Chat por WhatsApp (+34698731572)[/childwhatsapp]'); ?>
+			</div>
 	</div> <!-- seller-and-reviews-inner-wrapper -->
 	</div> <!-- seller-and-reviews -->
-
+	
 	<div class="clear"></div>
 </div> <!-- author-page -->
 

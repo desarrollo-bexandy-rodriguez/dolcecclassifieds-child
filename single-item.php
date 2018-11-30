@@ -565,7 +565,7 @@ get_header(); ?>
 							?>
 							<span class="seller-name"><?php the_author(); ?><?=is_business_account(get_the_author_meta('ID'))?><?=is_user_verified(get_the_author_meta('ID'))?> <?=get_user_rating(get_the_author_meta('ID'))?></span><br />
 							<span class="seller-details">
-								<span class="items-online"><b><span class="icon icon-star"></span> <?=(int)get_user_meta(get_the_author_meta('ID'), 'total_reviews', true)?></b> <?=strtolower(_d('reviews',869))?></span><br />
+								<span class="items-online"><b><span class="icon icon-star"></span> <?=(int)get_user_meta(get_the_author_meta('ID'), 'total_reviews', true)?></b> <?=strtolower('ratings')?></span><br />
 								<span class="items-online"><b><span class="icon icon-tags"></span> <?=count_user_posts(get_the_author_meta('ID'), $taxonomy_ad_url)?></b> <?=_d('ads online',172)?></span><br />
 								<span class="member-since">
 									<?php
